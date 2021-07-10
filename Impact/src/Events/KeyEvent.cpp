@@ -1,18 +1,23 @@
 #include "KeyEvent.h"
 
-KeyEvent::KeyEvent(ButtonState state, const uint8_t keyCode)
-	: m_State{ state }
+KeyEvent::KeyEvent(EventType type, const uint8_t keyCode)
+	: m_Type{ type }
 	, m_KeyCode{ keyCode }
 {}
 
+Event::EventType KeyEvent::GetType() const noexcept
+{
+	return m_Type;
+}
+
 bool KeyEvent::IsDown() const noexcept
 {
-	return m_State == ButtonState::Pressed;
+	return m_Type == EventType::KeyPressed;
 }
 
 bool KeyEvent::IsUp() const noexcept
 {
-	return m_State == ButtonState::Released;
+	return m_Type == EventType::KeyReleased;
 }
 
 uint8_t KeyEvent::GetCode() const noexcept

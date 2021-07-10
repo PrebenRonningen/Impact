@@ -1,7 +1,7 @@
 #include "MouseEvent.h"
 #include "src/Core/Mouse.h"
 
-MouseEvent::MouseEvent(MouseEventType type, const Mouse& parent) noexcept
+MouseEvent::MouseEvent(EventType type, const Mouse& parent) noexcept
 	: m_EventType{ type }
 	, m_PosX{ parent.GetPosX() }
 	, m_PosY{ parent.GetPosY() }
@@ -10,7 +10,7 @@ MouseEvent::MouseEvent(MouseEventType type, const Mouse& parent) noexcept
 	, m_MiddleIsPressed{ parent.MiddleIsPressed() }
 {};
 
-Event::MouseEventType MouseEvent::GetEventType() const noexcept
+Event::EventType MouseEvent::GetType() const noexcept
 {
 	return m_EventType;
 }

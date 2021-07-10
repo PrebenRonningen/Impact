@@ -1,5 +1,6 @@
 #include "ImpactWin.h"
 #include "Mouse.h"
+#include "src/Events/EventHandler.h"
 
 struct MouseData
 {
@@ -111,94 +112,82 @@ void Mouse::OnMouseMove(int x, int y) noexcept
 	g_MouseData.m_PosX = x;
 	g_MouseData.m_PosY = y;
 
-	g_MouseData.m_EventBuffer.push_back(MouseEvent(Event::MouseEventType::Move, *this));
-	TrimBuffer();
+	EventHandler::AddMouseEvent(std::move(MouseEvent{Event::EventType::Move, *this}));
+	
 }
 
 void Mouse::OnRawDelta(int dx, int dy) noexcept
 {
-	g_MouseData.m_RawDeltaBuffer.push_back({dx, dy});
+	g_MouseData.m_RawDeltaBuffer.push_back(std::move(RawDelta{dx, dy}));
 	TrimRawInputBuffer();
 }
 
 void Mouse::OnMouseLeave() noexcept
 {
 	g_MouseData.m_IsInWindow = false;
-	g_MouseData.m_EventBuffer.push_back(MouseEvent(Event::MouseEventType::Leave, *this));
-	TrimBuffer();
+	EventHandler::AddMouseEvent(std::move(MouseEvent{Event::EventType::Leave, *this}));
 }
 
 void Mouse::OnMouseEnter() noexcept
 {
 	g_MouseData.m_IsInWindow = true;
-	g_MouseData.m_EventBuffer.push_back(MouseEvent(Event::MouseEventType::Enter, *this));
-	TrimBuffer();
+	EventHandler::AddMouseEvent(std::move(MouseEvent{Event::EventType::Enter, *this}));
 }
 
 void Mouse::OnLeftPressed(int /*x*/ , int /*y*/) noexcept
 {
 	g_MouseData.m_IsLeftPressed = true;
-	g_MouseData.m_EventBuffer.push_back(MouseEvent(Event::MouseEventType::LPressed, *this));
-	TrimBuffer();
+	EventHandler::AddMouseEvent(std::move(MouseEvent{Event::EventType::LPressed, *this}));
 }
 
 void Mouse::OnLeftReleased(int /*x*/, int /*y*/) noexcept
 {
 	g_MouseData.m_IsLeftPressed = false;
-	g_MouseData.m_EventBuffer.push_back(MouseEvent(Event::MouseEventType::LReleased, *this));
-	TrimBuffer();
+	EventHandler::AddMouseEvent(std::move(MouseEvent{Event::EventType::LReleased, *this}));
 }
 
 void Mouse::OnRightPressed(int /*x*/, int /*y*/) noexcept
 {
 	g_MouseData.m_IsRightPressed = true;
-	g_MouseData.m_EventBuffer.push_back(MouseEvent(Event::MouseEventType::RPressed, *this));
-	TrimBuffer();
+	EventHandler::AddMouseEvent(std::move(MouseEvent{Event::EventType::RPressed, *this}));
 }
 
 void Mouse::OnRightReleased(int /*x*/, int /*y*/) noexcept
 {
 	g_MouseData.m_IsRightPressed = false;
-	g_MouseData.m_EventBuffer.push_back(MouseEvent(Event::MouseEventType::RReleased, *this));
-	TrimBuffer();
+	EventHandler::AddMouseEvent(std::move(MouseEvent{Event::EventType::RReleased, *this}));
 }
 
 void Mouse::OnMiddlePressed(int /*x*/, int /*y*/) noexcept
 {
 	g_MouseData.m_IsMiddlePressed = true;
-	g_MouseData.m_EventBuffer.push_back(MouseEvent(Event::MouseEventType::MPressed, *this));
-	TrimBuffer();
+	EventHandler::AddMouseEvent(std::move(MouseEvent{Event::EventType::MPressed, *this}));
 }
 
 void Mouse::OnMiddleReleased(int /*x*/, int /*y*/) noexcept
 {
 	g_MouseData.m_IsMiddlePressed = false;
-	g_MouseData.m_EventBuffer.push_back(MouseEvent(Event::MouseEventType::MReleased, *this));
-	TrimBuffer();
+	EventHandler::AddMouseEvent(std::move(MouseEvent{Event::EventType::MReleased, *this}));
 }
 
 void Mouse::OnWheelUp(int /*x*/, int /*y*/) noexcept
 {
-	g_MouseData.m_EventBuffer.push_back(MouseEvent(Event::MouseEventType::WheelUp, *this));
-	TrimBuffer();
+	EventHandler::AddMouseEvent(std::move(MouseEvent{Event::EventType::WheelUp, *this}));
 }
 
 void Mouse::OnWheelDown(int /*x*/, int /*y*/) noexcept
 {
-	g_MouseData.m_EventBuffer.push_back(MouseEvent(Event::MouseEventType::WheelDown, *this));
-	TrimBuffer();
+	EventHandler::AddMouseEvent(std::move(MouseEvent{Event::EventType::WheelDown, *this}));
 }
 
 void Mouse::OnWheelLeft(int /*x*/, int /*y*/) noexcept
 {
-	g_MouseData.m_EventBuffer.push_back(MouseEvent(Event::MouseEventType::WheelLeft, *this));
-	TrimBuffer();
+	EventHandler::AddMouseEvent(std::move(MouseEvent{Event::EventType::WheelLeft, *this}));
 }
 
 void Mouse::OnWheelRight(int /*x*/, int /*y*/) noexcept
 {
-	g_MouseData.m_EventBuffer.push_back(MouseEvent(Event::MouseEventType::WheelRight, *this));
-	TrimBuffer();
+	EventHandler::AddMouseEvent(std::move(MouseEvent{Event::EventType::WheelRight, *this}));
 }
 
 void Mouse::OnWheelDelta(int x, int y, int deltaX, int deltaY) noexcept
@@ -228,14 +217,6 @@ void Mouse::OnWheelDelta(int x, int y, int deltaX, int deltaY) noexcept
 	{
 		g_MouseData.m_WheelDeltaYCarry += WHEEL_DELTA;
 		OnWheelDown(x, y);
-	}
-}
-
-void Mouse::TrimBuffer() noexcept
-{
-	while ( g_MouseData.m_EventBuffer.size() > g_MouseData.m_BufferSize )
-	{
-		g_MouseData.m_EventBuffer.pop_back();
 	}
 }
 

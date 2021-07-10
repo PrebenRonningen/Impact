@@ -63,7 +63,6 @@ private:
 	
 	void OnWheelDelta(int x, int y, int deltaX, int deltaY) noexcept;
 	
-	void TrimBuffer() noexcept;
 	void TrimRawInputBuffer() noexcept;
 
 

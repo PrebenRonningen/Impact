@@ -7,8 +7,8 @@ class Mouse;
 class MouseEvent : public Event
 {
 public:
-	MouseEvent(MouseEventType type, const Mouse& parent) noexcept;
-	Event::MouseEventType GetEventType() const noexcept;
+	MouseEvent(EventType type, const Mouse& parent) noexcept;
+	Event::EventType GetType() const noexcept;
 	std::pair<int, int> GetPos() const noexcept;
 	int GetPosX() const noexcept;
 	int GetPosY() const noexcept;
@@ -16,7 +16,7 @@ public:
 	bool RightIsPressed() const noexcept;
 
 private:
-	MouseEventType m_EventType;
+	EventType m_EventType;
 	int m_PosX;
 	int m_PosY;
 	bool m_LeftIsPressed;

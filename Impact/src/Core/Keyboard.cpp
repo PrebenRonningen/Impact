@@ -1,6 +1,7 @@
 #include "Keyboard.h"
 #include "src/Events/KeyEvent.h"
 #include <vector>
+#include "src/Events/EventHandler.h"
 
 struct KeyboardData
 {
@@ -95,20 +96,20 @@ Keyboard& Keyboard::Get()
 void Keyboard::OnKeyDown(uint8_t keyCode) noexcept
 {
 	s_KeyboardData.m_KeyStates[keyCode] = true;
-	s_KeyboardData.m_KeyBuffer.push_back(KeyEvent{ Event::ButtonState::Pressed, keyCode });
+	EventHandler::AddKeyEvent(std::move(KeyEvent{ Event::EventType::KeyPressed, keyCode }));
 	TrimBuffer(s_KeyboardData.m_KeyBuffer);
 }
 
 void Keyboard::OnKeyUp(uint8_t keyCode) noexcept
 {
 	s_KeyboardData.m_KeyStates[keyCode] = false;
-	s_KeyboardData.m_KeyBuffer.push_back(KeyEvent{ Event::ButtonState::Released, keyCode });
+	EventHandler::AddKeyEvent(std::move(KeyEvent{ Event::EventType::KeyReleased, keyCode }));
 	TrimBuffer(s_KeyboardData.m_KeyBuffer);
 }
 
 void Keyboard::OnChar(wchar_t character) noexcept
 {
-	s_KeyboardData.m_CharBuffer.push_back(character);
+	s_KeyboardData.m_CharBuffer.push_back(std::move(character));
 	TrimBuffer(s_KeyboardData.m_CharBuffer);
 }
 

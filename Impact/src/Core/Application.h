@@ -2,6 +2,8 @@
 #include "src/Core/Window.h"
 #include "src/Core/Input.h"
 #include <chrono>
+class KeyEvent;
+class MouseEvent;
 class Application
 {
 public:
@@ -19,6 +21,7 @@ public:
 	void Update(float dt);
 	void Render(){};
 	void OnEvent(Event& e);
+	void OnMouseMove(Event& e);
 private:
 	Window m_Window;	
 	static Keyboard& m_Keyboard;
