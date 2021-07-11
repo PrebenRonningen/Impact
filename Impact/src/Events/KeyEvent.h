@@ -4,7 +4,7 @@ class KeyEvent : public Event
 {
 public:
 	KeyEvent(EventType state, const uint8_t keyCode);
-	Event::EventType GetType() const noexcept;
+	virtual EventType GetType() const noexcept override;
 	bool IsDown() const noexcept;
 	bool IsUp() const noexcept;
 	uint8_t GetCode() const noexcept;

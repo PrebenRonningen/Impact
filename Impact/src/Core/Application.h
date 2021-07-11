@@ -4,6 +4,7 @@
 #include <chrono>
 class KeyEvent;
 class MouseEvent;
+
 class Application
 {
 public:
@@ -20,8 +21,8 @@ public:
 	void ProcessInput();
 	void Update(float dt);
 	void Render(){};
-	void OnEvent(Event& e);
-	void OnMouseMove(Event& e);
+	bool OnKeyEvent(Event& e);
+	bool OnMouseMove(Event& e);
 private:
 	Window m_Window;	
 	static Keyboard& m_Keyboard;

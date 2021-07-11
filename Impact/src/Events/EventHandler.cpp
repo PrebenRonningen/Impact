@@ -5,7 +5,7 @@
 static constexpr uint8_t m_BufferSize = 16u;
 std::deque<KeyEvent> EventHandler::m_KeyBuffer{};
 std::deque<MouseEvent> EventHandler::m_MouseBuffer{};
-std::map<int, std::vector<std::pair<uint16_t, std::function<void(Event&)>>>>  EventHandler::m_LayerCallback{};
+std::map<int, std::vector<std::pair<uint16_t, std::function<bool(Event&)>>>>  EventHandler::m_LayerCallback{};
 uint16_t EventHandler::m_RegisteredEventTypes{0};
 static uint16_t eT{};
 void EventHandler::AddKeyEvent(KeyEvent&& event) noexcept
@@ -20,16 +20,16 @@ void EventHandler::AddMouseEvent(MouseEvent&& event) noexcept
 	TrimBuffer(m_MouseBuffer);
 }
 
-void EventHandler::RegisterEvent(int layer, const Event::EventType eventType, const std::function<void(Event&)>& callback) noexcept
+void EventHandler::RegisterEvent(int layer, const Event::EventType eventType, const std::function<bool(Event&)>& callback) noexcept
 {
 	auto it = m_LayerCallback.find(layer);
 	if ( it != m_LayerCallback.end() )
 	{
 		auto eventPair = std::find_if(it->second.begin(), it->second.end(), 
-						[&callback](std::pair<uint16_t, std::function<void(Event&)>>& pair)
+						[&callback](std::pair<uint16_t, std::function<bool(Event&)>>& pair)
 						{
-							auto a = callback.target_type().name();
-							auto b = pair.second.target_type().name();
+							auto a = &callback;
+							auto b = &pair.second;
 
 							auto k = a == b;
 							return k;
@@ -69,8 +69,7 @@ void EventHandler::ProcessEvent() noexcept
 	}
 }
 
-template <typename T>
-void EventHandler::HandleEvent(const T event) noexcept
+void EventHandler::HandleEvent(Event* event) noexcept
 {
 	eT = static_cast<uint16_t>( event->GetType() );
 	if ( !( eT & m_RegisteredEventTypes ) )
@@ -82,8 +81,8 @@ void EventHandler::HandleEvent(const T event) noexcept
 		{
 			if ( eT & eventPair.first )
 			{
-				eventPair.second(*event);
-				return;
+				event->m_Handled |= eventPair.second(*event);
+				if( event->m_Handled ) break;
 			}
 		}
 

@@ -3,8 +3,6 @@
 class Event
 {
 public:
-	// TODO: look into repeat
-
 	enum class EventType : uint16_t
 	{
 		NONE = 0x0000,
@@ -33,5 +31,44 @@ public:
 		Enter = 0x4000,
 		Leave = 0x8000
 	};
+
+	virtual EventType GetType() const noexcept
+	{
+		return EventType::NONE;
+	}
+
+	bool m_Handled = false;
+
+	// operator overloads;
+	inline friend EventType operator |(EventType a, EventType b)
+	{
+		return static_cast<EventType>( static_cast<uint16_t>( a ) | static_cast<uint16_t>( b ) );
+	}
+
+	inline friend EventType operator &(EventType a, EventType b)
+	{
+		return static_cast<EventType>( static_cast<int>( a ) & static_cast<int>( b ) );
+	}
+
+	inline friend EventType operator ^(EventType a, EventType b)
+	{
+		return static_cast<EventType>( static_cast<int>( a ) ^ static_cast<int>( b ) );
+	}
+
+
+
+	inline friend EventType& operator |=(EventType& a, EventType b)
+	{
+		return a = a | b;
+	}
+	inline friend EventType& operator &=(EventType& a, EventType b)
+	{
+		return a = a & b;
+	}
+	inline friend EventType operator ^=(EventType a, EventType b)
+	{
+		return a = a ^ b; 
+	}
+	
 };
 

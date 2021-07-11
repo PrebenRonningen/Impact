@@ -175,6 +175,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Core\LayerStack.cpp" />
+    <ClCompile Include="src\Core\Layer.cpp" />
     <ClCompile Include="src\Events\EventHandler.cpp" />
     <ClCompile Include="src\Events\MouseEvent.cpp" />
     <ClCompile Include="src\Events\KeyEvent.cpp" />
@@ -190,6 +192,8 @@
     <ClCompile Include="src\Core\Exceptions\WindowException.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Core\LayerStack.h" />
+    <ClInclude Include="src\Core\Layer.h" />
     <ClInclude Include="src\Events\EventHandler.h" />
     <ClInclude Include="src\Events\MouseEvent.h" />
     <ClInclude Include="src\Events\KeyEvent.h" />

@@ -13,16 +13,17 @@
 //Input& Application::m_Input = m_Input.Get();
 Keyboard& Application::m_Keyboard = Keyboard::Get();
 Mouse& Application::m_Mouse = Mouse::Get();
-
 Application::Application() noexcept
 	: m_Window{ 640, 480, L"Impact 3D" }
 {
 	// make easier and better to read
-	EventHandler::RegisterEvent(0, Event::EventType::KeyPressed, [this](auto&&... args) -> decltype( auto )
+	EventHandler::RegisterEvent(0, Event::EventType::KeyPressed | Event::EventType::KeyReleased, [this](auto&&... args) -> decltype( auto )
 								{
-									return this->Application::OnEvent(std::forward<decltype( args )>(args)...);
+									return this->Application::OnKeyEvent(std::forward<decltype( args )>(args)...);
 								});
 
+	// this must be fone so the function pointer is the same for the functions registering
+	// can be avoided by using bitwise or to add the EventTypes together
 	auto onMove = [this](auto&&... args) -> decltype( auto )
 	{
 		return this->Application::OnMouseMove(std::forward<decltype( args )>(args)...);
@@ -31,8 +32,7 @@ Application::Application() noexcept
 
 	EventHandler::RegisterEvent(0, Event::EventType::LPressed, onMove);
 
-	EventHandler::RegisterEvent(0, Event::EventType((int) Event::EventType::LPressed | (int)Event::EventType::LReleased), onMove);
-
+	EventHandler::RegisterEvent(0, Event::EventType::LPressed | Event::EventType::LReleased, onMove);
 
 }
 
@@ -57,7 +57,7 @@ int Application::Run()
 		// execute the game logic
 		const float dt = time.count();
 		//if( dt > 30.f/1000.f ) dt = (30.f / 1000.f);
-		ProcessInput();
+		EventHandler::ProcessEvent();
 		Update(dt);
 		Render();
 	}
@@ -65,7 +65,7 @@ int Application::Run()
 void Application::ProcessInput()
 {
 
-	EventHandler::ProcessEvent();
+	//EventHandler::ProcessEvent();
 //	Event e;
 //	while(SysyemEventCoontainer.PopEvent(e))
 //	{
@@ -243,24 +243,25 @@ void Application::Update(float dt)
 	acc += dt;
 	if ( acc >= 1 )
 	{
-		const auto fps = std::to_wstring(k / 1000.f);
-		m_Window.SetTitle(fps);
+		const auto fps = std::to_wstring(k / 1000.f).append(L"\n");
+		OutputDebugString(fps.c_str());
+		//250-400+
+		//290-480
+		//m_Window.SetTitle(fps);
 		k = 0;
 		acc-=1;
 	}
 }
-void Application::OnEvent(Event& e)
+bool Application::OnKeyEvent(Event& e)
 {
 	auto k = static_cast<KeyEvent&>(e).GetType();
 	k;
-
-
+	return false;
 }
 
 
-void Application::OnMouseMove(Event& e)
+bool Application::OnMouseMove(Event& e)
 {
-	static int i = 0;
 	auto m = static_cast<MouseEvent&>( e );
 
 	switch ( m.GetType() )
@@ -287,12 +288,12 @@ void Application::OnMouseMove(Event& e)
 			break;
 		case Event::EventType::Move:
 			{
-				#ifdef NDEBUG
-				std::wostringstream oss;
-				oss << L"Mouse Position: (" << m.GetPosX() << L", " << m.GetPosY() << L")\n";
-				std::wstring okTitle(oss.str().c_str());
-				OutputDebugStringW(okTitle.c_str());
-				#endif // NDEBUG
+			//	#ifdef NDEBUG
+			//	std::wostringstream oss;
+			//	oss << L"Mouse Position: (" << m.GetPosX() << L", " << m.GetPosY() << L")\n";
+			//	std::wstring okTitle(oss.str().c_str());
+			//	OutputDebugStringW(okTitle.c_str());
+			//	#endif // NDEBUG
 			break;
 			}
 		case Event::EventType::RawMove:
@@ -304,4 +305,6 @@ void Application::OnMouseMove(Event& e)
 		default:
 			break;
 	}
+
+	return false;
 }

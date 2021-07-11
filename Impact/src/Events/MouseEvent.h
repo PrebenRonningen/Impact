@@ -8,7 +8,7 @@ class MouseEvent : public Event
 {
 public:
 	MouseEvent(EventType type, const Mouse& parent) noexcept;
-	Event::EventType GetType() const noexcept;
+	virtual EventType GetType() const noexcept override;
 	std::pair<int, int> GetPos() const noexcept;
 	int GetPosX() const noexcept;
 	int GetPosY() const noexcept;

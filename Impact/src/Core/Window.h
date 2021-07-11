@@ -9,7 +9,6 @@ class Mouse;
 class Event;
 class Window
 {
-friend class Application; // temp
 public:
 	Window(int width, int height, const wchar_t* name);// noexcept;
 	~Window();

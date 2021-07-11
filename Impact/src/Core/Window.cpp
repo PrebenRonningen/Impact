@@ -152,10 +152,10 @@ LRESULT CALLBACK Window::HandleMessageInter(HWND hwnd, UINT uMsg, WPARAM wParam,
 
 LRESULT Window::HandleMessage(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) noexcept
 {
-#ifdef _DEBUG
-	static WindowsMessageMap wmm;
-	OutputDebugStringA(wmm(uMsg, lParam, wParam).c_str());
-#endif// _DEBUG
+//#ifdef _DEBUG
+//	static WindowsMessageMap wmm;
+//	OutputDebugStringA(wmm(uMsg, lParam, wParam).c_str());
+//#endif// _DEBUG
 
 	switch ( uMsg )
 	{
