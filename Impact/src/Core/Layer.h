@@ -1,11 +1,13 @@
 #pragma once
-class Layer
+namespace Impact
 {
-public:
-	virtual ~Layer() = default;
-	virtual void OnAttach() = 0;
-	virtual void OnDetatch() = 0;
-	virtual void Update(float dt) = 0;
-	virtual void Render() const = 0;
-};
-
+	class Layer
+	{
+	public:
+		virtual ~Layer() noexcept = default;
+		virtual void OnAttach() noexcept = 0;
+		virtual void OnDetach() noexcept = 0;
+		virtual void Update(float dt) noexcept = 0;
+		virtual void Render() const noexcept = 0;
+	};
+}

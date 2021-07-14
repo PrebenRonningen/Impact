@@ -1,26 +1,28 @@
 #include "KeyEvent.h"
-
-KeyEvent::KeyEvent(EventType type, const uint8_t keyCode)
-	: m_Type{ type }
-	, m_KeyCode{ keyCode }
-{}
-
-Event::EventType KeyEvent::GetType() const noexcept
+namespace Impact
 {
-	return m_Type;
-}
+	KeyEvent::KeyEvent(EventType type, const uint8_t keyCode)
+		: m_Type{ type }
+		, m_KeyCode{ keyCode }
+	{}
 
-bool KeyEvent::IsDown() const noexcept
-{
-	return m_Type == EventType::KeyPressed;
-}
+	Event::EventType KeyEvent::GetType() const noexcept
+	{
+		return m_Type;
+	}
 
-bool KeyEvent::IsUp() const noexcept
-{
-	return m_Type == EventType::KeyReleased;
-}
+	bool KeyEvent::IsDown() const noexcept
+	{
+		return m_Type == EventType::KeyPressed;
+	}
 
-uint8_t KeyEvent::GetCode() const noexcept
-{
-	return m_KeyCode;
+	bool KeyEvent::IsUp() const noexcept
+	{
+		return m_Type == EventType::KeyReleased;
+	}
+
+	uint8_t KeyEvent::GetCode() const noexcept
+	{
+		return m_KeyCode;
+	}
 }

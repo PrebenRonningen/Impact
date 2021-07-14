@@ -1,15 +1,17 @@
 #pragma once
-class Keyboard;
-class Mouse;
-
-class Input
+namespace Impact
 {
-public:
-	static Input& Get(){return m_Input;}
-private:
-	Input() = default;
-	static Input m_Input;
-	static Keyboard& m_Keyboard;
-	static Mouse& m_Mouse;
-};
-
+	class Keyboard;
+	class Mouse;
+	
+	class Input
+	{
+	public:
+		static Input& Get(){return m_Input;}
+	private:
+		Input() = default;
+		static Input m_Input;
+		static Keyboard& m_Keyboard;
+		static Mouse& m_Mouse;
+	};
+}
