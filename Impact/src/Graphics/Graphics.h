@@ -3,8 +3,8 @@
 // doesn't seem like dxgi.h is needed if #pragma comment(lib, "dxgi.lib") is used
 //#include <dxgi.h>	
 #include <d3d11.h>
-//#include <d3dcompiler.h>	// not needed yet
-
+#include <DirectXMath.h>
+#include <DirectXColors.h>
 #include <wrl.h>
 
 #include <vector>
@@ -22,8 +22,14 @@ namespace Impact
 #pragma endregion
 	
 		~Graphics();
-		void ClearBuffer(const float red, const float green, const float blue, const float alpha = 1.0f) noexcept;
-		void Present();
+		void ClearBuffer(const DirectX::XMFLOAT4& color) noexcept;
+		void DrawTriangle();
+
+		void Present();		
+		void VSynchOnOff()
+		{
+			m_VSyncEnabled = !m_VSyncEnabled;
+		}; // temp
 	private:
 		bool m_VSyncEnabled;
 	

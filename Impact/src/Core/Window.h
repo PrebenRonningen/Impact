@@ -23,7 +23,6 @@ namespace Impact
 		Window& operator=(const Window& other) = delete;
 		Window& operator=(Window&& other) = delete;
 	#pragma endregion
-		
 		void SetTitle( const std::wstring& title); // ony for testing
 	
 		HWND GetWindowHandle() {return m_hWnd;};

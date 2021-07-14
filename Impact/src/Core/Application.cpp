@@ -22,11 +22,11 @@ namespace Impact
 		, m_Color{0}
 	{
 		// make easier and better to read
-		//EventHandler::RegisterEvent(0, Event::EventType::KeyPressed | Event::EventType::KeyReleased, [this](auto&&... args) -> decltype( auto )
-		//							{
-		//								return this->Application::OnKeyEvent(std::forward<decltype( args )>(args)...);
-		//							});
-		//
+		EventHandler::RegisterEvent(0, Event::EventType::KeyPressed | Event::EventType::KeyReleased, [this](auto&&... args) -> decltype( auto )
+									{
+										return this->Application::OnKeyEvent(std::forward<decltype( args )>(args)...);
+									});
+		
 		// this must be fone so the function pointer is the same for the functions registering
 		// can be avoided by using bitwise or to add the EventTypes together
 		auto onMove = [this](auto&&... args) -> decltype( auto )
@@ -277,7 +277,11 @@ namespace Impact
 	void Application::Render()
 	{
 		m_Color = sin(std::chrono::duration<float>(std::chrono::steady_clock::now().time_since_epoch()).count()) / 2.f + 0.5f;
-		m_Window.GetGraphix().ClearBuffer(m_Color, m_Color, 1.0f);
+		DirectX::XMFLOAT4 col{ m_Color,m_Color,m_Color,m_Color };
+		DirectX::XMStoreFloat4(&col, DirectX::XMVectorMultiply(DirectX::XMLoadFloat4(&col), DirectX::Colors::CornflowerBlue));
+
+		m_Window.GetGraphix().ClearBuffer( col );
+		m_Window.GetGraphix().DrawTriangle();
 
 		for ( Layer* layer : m_LayerStack )
 			layer->Render();
@@ -287,8 +291,19 @@ namespace Impact
 	
 	bool Application::OnKeyEvent(Event& e)
 	{
-		auto k = static_cast<KeyEvent&>(e).GetType();
-		k;
+		auto k = static_cast<KeyEvent&>(e);
+		
+		switch ( k.GetType() )
+		{
+			case Event::EventType::KeyPressed:
+					if(m_Keyboard.IsKeyDown('V'))
+						m_Window.GetGraphix().VSynchOnOff();
+				break;
+
+			default:
+				break;
+		}
+
 		return false;
 	}
 	
