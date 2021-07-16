@@ -18,7 +18,7 @@ namespace Impact
 		Mouse& operator=(const Mouse& other) = delete;
 		Mouse& operator=(Mouse&& other) = delete;
 	#pragma endregion
-		std::pair<int, int> GetPos() const noexcept;
+		int* GetPos() const noexcept;
 		int GetPosX() const noexcept;
 		int GetPosY() const noexcept;
 		bool IsInWindow() const noexcept;

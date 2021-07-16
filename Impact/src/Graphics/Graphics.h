@@ -12,6 +12,7 @@ namespace Impact
 {
 	class Graphics
 	{
+		friend class Bindable;
 	public:
 		Graphics(HWND hwnd, uint16_t width, uint16_t height);
 	#pragma region delete
@@ -23,19 +24,25 @@ namespace Impact
 	
 		~Graphics();
 		void ClearBuffer(const DirectX::XMFLOAT4& color) noexcept;
-		void DrawTriangle();
 
-		void Present();		
+		void DrawIndexed(const uint32_t count) const noexcept;
+		void Present();
+		DirectX::XMFLOAT4X4 GetProjection() const noexcept;
 		void VSynchOnOff()
 		{
 			m_VSyncEnabled = !m_VSyncEnabled;
 		}; // temp
 	private:
+
+		uint16_t m_ViewportWidth;
+		uint16_t m_ViewportHeight;
+
 		bool m_VSyncEnabled;
 	
 		ID3D11Device* m_pDevice = nullptr;
 		IDXGISwapChain* m_pSwapChain = nullptr;
 		ID3D11DeviceContext* m_pDeviceContext = nullptr;
 		ID3D11RenderTargetView* m_pRenderTargetView = nullptr;
+		ID3D11DepthStencilView* m_pDepthStencilView = nullptr;
 	};
 }

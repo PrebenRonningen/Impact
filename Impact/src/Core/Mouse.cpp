@@ -29,9 +29,9 @@ namespace Impact
 
 	Mouse Mouse::m_Mouse{};
 
-	std::pair<int, int> Mouse::GetPos() const noexcept
+	int* Mouse::GetPos() const noexcept
 	{
-		return { g_MouseData.m_PosX, g_MouseData.m_PosY};
+		return &g_MouseData.m_PosX;
 	}
 
 	int Mouse::GetPosX() const noexcept

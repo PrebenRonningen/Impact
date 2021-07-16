@@ -8,11 +8,14 @@
 #include "Events/MouseEvent.h"
 #include "Graphics/Graphics.h"
 
+#include "Graphics/Drawable/TestCube.h"
+
 #include <sstream>
 #include <map>
 #include <algorithm>
 namespace Impact
 {
+	static float m_Angle;
 	//Input& Application::m_Input = m_Input.Get();
 	Keyboard& Application::m_Keyboard = Keyboard::Get();
 	Mouse& Application::m_Mouse = Mouse::Get();
@@ -36,9 +39,21 @@ namespace Impact
 		EventHandler::RegisterEvent(0, Event::EventType::Move, onMove);
 		EventHandler::RegisterEvent(0, Event::EventType::LPressed, onMove);
 		EventHandler::RegisterEvent(0, Event::EventType::LPressed | Event::EventType::LReleased, onMove);
-	
-	
-	
+
+
+
+		std::mt19937 rng(std::random_device{}( ));
+		std::uniform_real_distribution<float> adist(0.0f, 3.1415f * 2.0f);
+		std::uniform_real_distribution<float> ddist(0.0f, 3.1415f * 2.0f);
+		std::uniform_real_distribution<float> odist(0.0f, 3.1415f * 0.3f);
+		std::uniform_real_distribution<float> rdist(6.0f, 20.0f);
+		for ( auto i = 0; i < 80; i++ )
+		{
+			boxes.push_back(std::make_unique<TestCube>(
+				m_Window.GetGraphix(), rng, adist,
+				ddist, odist, rdist
+				));
+		}
 	}
 	
 	Application::~Application()
@@ -252,6 +267,7 @@ namespace Impact
 		//		}
 		//	}
 	}
+	
 	void Application::Update(float dt)
 	{
 		static int k = 0;
@@ -271,8 +287,14 @@ namespace Impact
 
 		for ( Layer* layer : m_LayerStack )
 			layer->Update(dt);
+
+
+		for ( auto& b : boxes )
+		{
+			b->Update(dt);
+		}
+
 	}
-	
 
 	void Application::Render()
 	{
@@ -281,10 +303,14 @@ namespace Impact
 		DirectX::XMStoreFloat4(&col, DirectX::XMVectorMultiply(DirectX::XMLoadFloat4(&col), DirectX::Colors::CornflowerBlue));
 
 		m_Window.GetGraphix().ClearBuffer( col );
-		m_Window.GetGraphix().DrawTriangle();
 
 		for ( Layer* layer : m_LayerStack )
 			layer->Render();
+
+		for ( auto& b : boxes )
+		{
+			b->Draw(m_Window.GetGraphix());
+		}
 
 		m_Window.GetGraphix().Present();
 	}

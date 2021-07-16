@@ -13,6 +13,8 @@ namespace Impact
 {
 	Graphics::Graphics(HWND hwnd, uint16_t width, uint16_t height)
 		: m_VSyncEnabled{ true }
+		, m_ViewportWidth{ width }
+		, m_ViewportHeight{ height }
 	{
 		// Create a DirectX graphics interface factory.
 		Microsoft::WRL::ComPtr<IDXGIFactory> pFactory{};
@@ -182,11 +184,88 @@ namespace Impact
 
 		//pBackBuffer->Release();
 		//pBackBuffer = nullptr;
+
+		//Depth Buffer Setup
+		D3D11_DEPTH_STENCIL_DESC depthStencilStateDesc{};
+		
+		depthStencilStateDesc.DepthEnable = TRUE;
+		depthStencilStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		depthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS;
+		
+		//depthStencilDesc.StencilEnable = true;
+		//depthStencilDesc.StencilReadMask = 0xFF;
+		//depthStencilDesc.StencilWriteMask = 0xFF;
+		//
+		//// Stencil operations if pixel is front-facing.
+		//depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		//depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+		//depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		//depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+		//
+		//// Stencil operations if pixel is back-facing
+		//depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		//depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+		//depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		//depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+		
+		Microsoft::WRL::ComPtr<ID3D11DepthStencilState> pDepthStencilState{};
+		
+		GFX_EXCEPTION_NOINFO(__LINE__, __FILE__,
+			m_pDevice->CreateDepthStencilState(&depthStencilStateDesc, &pDepthStencilState));
+		m_pDeviceContext->OMSetDepthStencilState(pDepthStencilState.Get(), 1); // try changing this
+		
+		// Depth Stencil Buffer setup
+		
+		Microsoft::WRL::ComPtr<ID3D11Texture2D> pDepthStencil;
+		D3D11_TEXTURE2D_DESC depthStencilDesc{};
+		
+		depthStencilDesc.Width = m_ViewportWidth;
+		depthStencilDesc.Height = m_ViewportHeight;
+		depthStencilDesc.MipLevels = 1;
+		depthStencilDesc.ArraySize = 1;
+		depthStencilDesc.Format = DXGI_FORMAT_D32_FLOAT;
+		depthStencilDesc.SampleDesc.Count = 1;
+		depthStencilDesc.SampleDesc.Quality = 0;
+		depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+		depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		depthStencilDesc.CPUAccessFlags = 0;
+		depthStencilDesc.MiscFlags = 0;
+		
+		GFX_EXCEPTION_NOINFO(__LINE__, __FILE__,
+			m_pDevice->CreateTexture2D(&depthStencilDesc, nullptr, &pDepthStencil));
+		
+		D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc{};
+		
+		depthStencilViewDesc.Format = depthStencilDesc.Format;
+		depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		depthStencilViewDesc.Texture2D.MipSlice = 0;
+		
+		GFX_EXCEPTION_NOINFO(__LINE__, __FILE__,
+			m_pDevice->CreateDepthStencilView(pDepthStencil.Get(), &depthStencilViewDesc, &m_pDepthStencilView));
+		
+		m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
+
+		// viewport
+		D3D11_VIEWPORT viewport{};
+		viewport.Width = m_ViewportWidth;
+		viewport.Height = m_ViewportHeight;
+		viewport.MinDepth = 0;
+		viewport.MaxDepth = 1;
+		viewport.TopLeftX = 0;
+		viewport.TopLeftY = 0;
+
+		m_pDeviceContext->RSSetViewports(1, &viewport);
 	}
 
 	Graphics::~Graphics()
 	{
 		// consider ComPtr
+		if ( m_pDepthStencilView )
+		{
+			m_pDepthStencilView->Release();
+			m_pDepthStencilView = nullptr;
+		}
+
 		if ( m_pRenderTargetView )
 		{
 			m_pRenderTargetView->Release();
@@ -215,143 +294,12 @@ namespace Impact
 	void Graphics::ClearBuffer(const DirectX::XMFLOAT4& color) noexcept
 	{
 		m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, &color.x);
+		m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1, 0);
 	}
 
-	void Graphics::DrawTriangle()
+	void Graphics::DrawIndexed(const uint32_t count) const noexcept
 	{
-		// Vertex Setup
-		struct Vertex
-		{
-			float x, y, z;
-			float r, g, b, a;
-		};
-
-		// LineList
-		//const Vertex vtx[]
-		//{
-		//	{0.5f, -0.5, 0.0f},		//bottom right
-		//	{-0.5f, -0.5, 0.0f},	//bottom left
-
-		//	{-0.5f, -0.5, 0.0f},	//bottom left
-		//	{-0.5f, 0.5, 0.0f},		//top left
-
-		//	{-0.5f, 0.5, 0.0f},		//top left
-		//	{0.5f, -0.5, 0.0f},		//bottom right
-
-		//	{0.5f, -0.5, 0.0f},		//bottom right
-		//	{0.5f, 0.5f, 0.0f},		//top right
-
-		//	{0.5f, 0.5f, 0.0f},		//top right
-		//	{-0.5f, 0.5, 0.0f},		//top left
-		//};
-
-
-		// LineStrip
-		//const Vertex vtx[]
-		//{
-		//	{  0.5f, -0.5,  0.0f,   1.0f, 0.0f, 0.0f, 1.0f},		//bottom right
-		//	{ -0.5f, -0.5,  0.0f,   0.0f, 1.0f, 0.0f, 1.0f},		//bottom left
-		//	{ -0.5f,  0.5,  0.0f,   0.0f, 0.0f, 1.0f, 1.0f},		//top left
-		//
-		//	{  0.5f, -0.5,  0.0f,   0.0f, 1.0f, 0.0f, 1.0f},		//bottom right
-		//	{  0.5f,  0.5f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f},		//top right
-		//	{ -0.5f,  0.5,  0.0f,   0.0f, 0.0f, 1.0f, 1.0f},		//top left
-		//};
-
-		// TriangleList
-		const Vertex vtx[]
-		{
-			{  0.5f, -0.5,  0.0f,   1.0f, 0.0f, 0.0f, 1.0f},		//bottom right
-			{ -0.5f, -0.5,  0.0f,   0.0f, 1.0f, 0.0f, 1.0f},		//bottom left
-			{ -0.5f,  0.5,  0.0f,   0.0f, 0.0f, 1.0f, 1.0f},		//top left
-
-			{ -0.5f,  0.5,  0.0f,   0.0f, 0.0f, 1.0f, 1.0f},		//top left
-			{  0.5f,  0.5f, 0.0f,   0.0f, 0.0f, 0.0f, 1.0f},		//top right
-			{  0.5f, -0.5,  0.0f,   1.0f, 0.0f, 0.0f, 1.0f},		//bottom right
-		};
-
-		D3D11_BUFFER_DESC vertexBufferDesc{};
-
-		vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		vertexBufferDesc.CPUAccessFlags = 0;
-		vertexBufferDesc.MiscFlags = 0;
-		vertexBufferDesc.StructureByteStride = sizeof(Vertex);
-		vertexBufferDesc.ByteWidth = sizeof(vtx);
-
-		D3D11_SUBRESOURCE_DATA subResourceData = {};
-		subResourceData.pSysMem = vtx;
-
-		Microsoft::WRL::ComPtr<ID3D11Buffer> pVertexBuffer;
-		GFX_EXCEPTION_NOINFO(__LINE__, __FILE__, m_pDevice->CreateBuffer(&vertexBufferDesc, &subResourceData, &pVertexBuffer));
-
-		const UINT stride = sizeof(Vertex);
-		const UINT offset = 0;
-		m_pDeviceContext->IASetVertexBuffers(0, 1, pVertexBuffer.GetAddressOf(), &stride, &offset);
-
-		// PixelShader
-		Microsoft::WRL::ComPtr<ID3D11PixelShader> pPixelShader;
-		Microsoft::WRL::ComPtr<ID3DBlob> pBlob;
-		GFX_EXCEPTION_NOINFO(__LINE__, __FILE__, D3DReadFileToBlob(L"D:/Git/Impact/Impact/Resources/Shaders/PixelShader.cso", &pBlob));
-		GFX_EXCEPTION_NOINFO(__LINE__, __FILE__, m_pDevice->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader));
-		m_pDeviceContext->PSSetShader(pPixelShader.Get(), nullptr, 0);
-
-		// vertex Shader
-		Microsoft::WRL::ComPtr<ID3D11VertexShader> pVertexShader;
-		GFX_EXCEPTION_NOINFO(__LINE__, __FILE__, D3DReadFileToBlob(L"D:/Git/Impact/Impact/Resources/Shaders/VertexShader.cso", &pBlob));
-		GFX_EXCEPTION_NOINFO(__LINE__, __FILE__, m_pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader));
-		m_pDeviceContext->VSSetShader(pVertexShader.Get(), nullptr, 0);
-	
-		// Index Setup
-
-		//const int indx[3]
-		//{
-		//	0, 2, 1
-		//};
-
-		//D3D11_BUFFER_DESC indexBufferDesc{};
-
-		//indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-		//indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		//indexBufferDesc.CPUAccessFlags = 0;
-		//indexBufferDesc.MiscFlags = 0;
-		//indexBufferDesc.StructureByteStride = sizeof(int);
-		//indexBufferDesc.ByteWidth = sizeof(indx);
-
-		Microsoft::WRL::ComPtr<ID3D11InputLayout> pInputLayour;
-		const D3D11_INPUT_ELEMENT_DESC ied[]
-		{
-			{"SV_POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		};
-
-		GFX_EXCEPTION_NOINFO(__LINE__, __FILE__,
-				m_pDevice->CreateInputLayout(
-					ied,
-					(UINT) std::size(ied),
-					pBlob->GetBufferPointer(),
-					pBlob->GetBufferSize(),
-					&pInputLayour));
-
-		m_pDeviceContext->IASetInputLayout(pInputLayour.Get());
-
-		m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, nullptr);
-
-
-		//m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
-		m_pDeviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
-
-
-		D3D11_VIEWPORT viewport{};
-		viewport.Width = 1280;
-		viewport.Height = 720;
-		viewport.MinDepth = 0;
-		viewport.MaxDepth = 1;
-		viewport.TopLeftX = 0;
-		viewport.TopLeftY = 0;
-	
-		m_pDeviceContext->RSSetViewports(1, &viewport);
-		m_pDeviceContext->Draw((UINT) std::size(vtx), 0);
+		m_pDeviceContext->DrawIndexed(count, 0, 0);
 	}
 
 	void Graphics::Present()
@@ -362,5 +310,12 @@ namespace Impact
 
 		if ( FAILED(hr) )
 			GFX_DEVICE_REMOVED_EXCEPTION(__LINE__, __FILE__, hr, m_pDevice);
+	}
+	DirectX::XMFLOAT4X4 Graphics::GetProjection() const noexcept
+	{
+		float aspectRation = ( float(m_ViewportHeight) / m_ViewportWidth );
+		DirectX::XMFLOAT4X4 projMatrix;
+		DirectX::XMStoreFloat4x4(&projMatrix, DirectX::XMMatrixPerspectiveLH(1.0f, aspectRation, 0.5f, 40.0f));
+		return projMatrix;
 	}
 }

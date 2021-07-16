@@ -1,20 +1,30 @@
 
-struct VSInput
+cbuffer CBuffer
 {
-	float3 pos	: SV_POSITION;
-	float4 color : COLOR;
+	matrix transform;
 };
 
-struct VSOutput
-{
-	float4 pos: SV_POSITION;
-	float4 color : COLOR;
-};
+//struct VSInput
+//{
+//	float3 pos		: POSITION;
+//	float4 color	: Color;
+//};
 
-VSOutput main(VSInput input)
+//struct VSOutput
+//{
+//	float4 pos		: SV_POSITION;
+//	float4 color	: Color;
+//};
+
+//VSOutput main(VSInput input)
+//{
+//	VSOutput output;
+//	output.pos = mul( float4( input.pos.xyz, 1.0f ), transform );
+//	output.color = input.color;
+//	return output;
+//}
+
+float4 main(float3 pos : Position) : SV_Position
 {
-	VSOutput output;
-	output.pos = float4( input.pos.xyz, 1.0f );
-	output.color = input.color;
-	return output;
+	return mul( float4( pos, 1.0f ), transform );
 }

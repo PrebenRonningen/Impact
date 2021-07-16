@@ -1,5 +1,6 @@
 
 #include <Impact.h>
+#include <DirectXMath.h>
 #include "Core/WinMain.h"
 
 class TestLayer : public Impact::Layer

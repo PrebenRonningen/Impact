@@ -1,12 +1,17 @@
 
+cbuffer CBuffer
+{
+	float4 face_Color[6];
+}
+
 struct PSInput
 {
-	float4 pos: SV_POSITION;
-	float4 color : COLOR;
+	float4 pos		: SV_Position;
+	float4 color	: Color;
 };
 
 
-float4 main(PSInput input) : SV_TARGET
+float4 main(uint tid : SV_PrimitiveID) : SV_Target
 {
-	return input.color;
+	return face_Color[tid/2];
 }

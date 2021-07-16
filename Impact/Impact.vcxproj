@@ -187,6 +187,10 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Graphics\Bindable\PixelShader.cpp" />
+    <ClCompile Include="src\Graphics\Bindable\ConstantBuffer.cpp" />
+    <ClCompile Include="src\Graphics\Bindable\InputLayout.cpp" />
+    <ClCompile Include="src\Graphics\Bindable\IndexBuffer.cpp" />
     <ClCompile Include="src\Core\Exceptions\GfxInfoException.cpp" />
     <ClCompile Include="src\Core\Exceptions\DXError.cpp" />
     <ClCompile Include="src\Core\Exceptions\HrException.cpp" />
@@ -204,9 +208,17 @@
     <ClCompile Include="src\Core\WinMain.h" />
     <ClCompile Include="src\Core\Window.cpp" />
     <ClCompile Include="src\Core\Exceptions\WindowException.cpp" />
+    <ClCompile Include="src\Graphics\Drawable\RenderComponent.cpp" />
     <ClCompile Include="src\Graphics\Graphics.cpp" />
+    <ClCompile Include="src\Graphics\Bindable\VertexBuffer.cpp" />
+    <ClCompile Include="src\Graphics\Bindable\VertexShader.cpp" />
+    <ClCompile Include="src\Graphics\Drawable\TestCube.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Graphics\Bindable\PixelShader.h" />
+    <ClInclude Include="src\Graphics\Bindable\ConstantBuffer.h" />
+    <ClInclude Include="src\Graphics\Bindable\InputLayout.h" />
+    <ClInclude Include="src\Graphics\Bindable\IndexBuffer.h" />
     <ClInclude Include="src\Core\Exceptions\GfxInfoException.h" />
     <ClInclude Include="src\Core\Exceptions\DXError.h" />
     <ClInclude Include="src\Core\Exceptions\GraphicsThrow.h" />
@@ -228,8 +240,15 @@
     <ClInclude Include="src\Debug\WindowsMessageMap.h" />
     <ClInclude Include="src\Core\Window.h" />
     <ClInclude Include="src\Core\Exceptions\WindowException.h" />
+    <ClInclude Include="src\Graphics\Bindable\Bindable.h" />
+    <ClInclude Include="src\Graphics\Bindable\Topology.h" />
+    <ClInclude Include="src\Graphics\Bindable\TransformCbuf.h" />
+    <ClInclude Include="src\Graphics\Drawable\RenderComponent.h" />
     <ClInclude Include="src\Graphics\Graphics.h" />
     <ClInclude Include="src\Impact.h" />
+    <ClInclude Include="src\Graphics\Bindable\VertexBuffer.h" />
+    <ClInclude Include="src\Graphics\Bindable\VertexShader.h" />
+    <ClInclude Include="src\Graphics\Drawable\TestCube.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\PlanetIcon.ico" />
@@ -252,6 +271,10 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Impact\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Impact\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Impact\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="src\Shaders\VertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
@@ -262,6 +285,10 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Impact\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Impact\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Impact\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
