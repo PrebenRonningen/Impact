@@ -15,8 +15,8 @@ namespace Impact
 			vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 			vertexBufferDesc.CPUAccessFlags = 0;
 			vertexBufferDesc.MiscFlags = 0;
-			vertexBufferDesc.StructureByteStride = UINT( sizeof(V) * vertices.size());
-			vertexBufferDesc.ByteWidth = sizeof(V);
+			vertexBufferDesc.StructureByteStride = sizeof(V);
+			vertexBufferDesc.ByteWidth = UINT(sizeof(V) * vertices.size());
 
 			D3D11_SUBRESOURCE_DATA vertexSubResourceData = {};
 			vertexSubResourceData.pSysMem = vertices.data();

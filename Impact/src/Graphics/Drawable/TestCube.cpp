@@ -78,15 +78,15 @@ namespace Impact
 		const colorConstBuffer constBuffer =
 		{
 			{
-				{1.0f, 0.0f, 1.0f},
-				{1.0f, 0.0f, 0.0f},
-				{0.0f, 1.0f, 0.0f},
-				{0.0f, 0.0f, 1.0f},
-				{1.0f, 1.0f, 0.0f},
-				{0.0f, 1.0f, 1.0f},
+				{1.0f, 0.0f, 1.0f, 1.0f},
+				{1.0f, 0.0f, 0.0f, 1.0f},
+				{0.0f, 1.0f, 0.0f, 1.0f},
+				{0.0f, 0.0f, 1.0f, 1.0f},
+				{1.0f, 1.0f, 0.0f, 1.0f},
+				{0.0f, 1.0f, 1.0f, 1.0f},
 			}
 		};
-		AddBind(std::make_unique<ConstantBuffer<colorConstBuffer>>(gfx, PipelineStage::PixelShader));
+		AddBind(std::make_unique<ConstantBuffer<colorConstBuffer>>(gfx, constBuffer, PipelineStage::PixelShader));
 
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> inputElements=
 		{
@@ -98,19 +98,15 @@ namespace Impact
 		AddBind(std::make_unique<TransformCbuf>(gfx, *this));
 	}
 
-	TestCube::TestCube(Graphics& gfx)
-	{
-		gfx;
-	}
 
 	void TestCube::Update(float dt) noexcept
 	{
-		roll	= droll		* dt;
-		pitch	= dpitch	* dt;
-		yaw		= dyaw		* dt;
-		theta	= dtheta	* dt;;
-		phi		= dphi		* dt;
-		chi		= dchi		* dt;
+		roll	+= droll		* dt;
+		pitch	+= dpitch	* dt;
+		yaw		+= dyaw		* dt;
+		theta	+= dtheta	* dt;;
+		phi		+= dphi		* dt;
+		chi		+= dchi		* dt;
 	}
 
 	DirectX::XMFLOAT4X4 TestCube::GetTransform() const noexcept

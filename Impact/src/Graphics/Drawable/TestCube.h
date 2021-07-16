@@ -12,7 +12,6 @@ namespace Impact
 			std::uniform_real_distribution<float>& ddist,
 			std::uniform_real_distribution<float>& odist,
 			std::uniform_real_distribution<float>& rdist);
-		TestCube(Graphics& gfx);
 		virtual void Update(float dt) noexcept override;
 		virtual DirectX::XMFLOAT4X4 GetTransform() const noexcept override;
 
