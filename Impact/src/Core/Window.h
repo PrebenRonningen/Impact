@@ -39,8 +39,7 @@ namespace Impact
 		uint16_t m_Height;
 		HWND m_hWnd;
 		std::unique_ptr<Graphics> pGfx;
-	
-	
+
 		//static UserData m_Data;
 		//std::function<void(Event&)> m_EventCallBack;
 		static Keyboard& m_Keyboard;

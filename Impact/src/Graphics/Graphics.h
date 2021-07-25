@@ -32,8 +32,9 @@ namespace Impact
 		{
 			m_VSyncEnabled = !m_VSyncEnabled;
 		}; // temp
-	private:
 
+	private:
+		void OnWindowResize(){};
 		uint16_t m_ViewportWidth;
 		uint16_t m_ViewportHeight;
 

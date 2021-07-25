@@ -1,11 +1,21 @@
 #include "VertexShader.h"
+#include <stringapiset.h>
 #include <d3dcompiler.h>
 
 #pragma comment(lib,"D3DCompiler.lib")
-Impact::VertexShader::VertexShader(Graphics& gfx, const std::string_view& path)
-	: m_Path{path}
+Impact::VertexShader::VertexShader(Graphics& gfx, const std::string& path)
 {
-	GFX_EXCEPTION_NOINFO(__LINE__, __FILE__, D3DReadFileToBlob(L"D:/Git/Impact/Impact/Resources/Shaders/VertexShader.cso", &m_pByteCodeBlob));
+	m_Path = L"../Impact/Resources/Shaders/";
+	std::wstring widePath;
+	int conversionResult = MultiByteToWideChar(CP_UTF8, 0, path.c_str(), (int)strlen(path.c_str()), NULL, 0);
+	if (conversionResult > 0)
+	{
+		widePath.resize(conversionResult + 10);
+		conversionResult = MultiByteToWideChar(CP_UTF8, 0, path.c_str(), (int)strlen(path.c_str()), &widePath[0], (int)widePath.size());
+	}
+	m_Path.append(widePath);
+
+	GFX_EXCEPTION_NOINFO(__LINE__, __FILE__, D3DReadFileToBlob(m_Path.c_str(), &m_pByteCodeBlob));
 	GFX_EXCEPTION_NOINFO(__LINE__, __FILE__, GetDevice(gfx)->CreateVertexShader(m_pByteCodeBlob->GetBufferPointer(), m_pByteCodeBlob->GetBufferSize(), nullptr, &m_pVertexShader));
 }
 

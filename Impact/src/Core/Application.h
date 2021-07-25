@@ -22,7 +22,7 @@ namespace Impact
 	
 		int Run();
 	
-		void PushLayer(Layer* layer) noexcept;
+		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer) noexcept;
 	
 	private:
@@ -43,7 +43,7 @@ namespace Impact
 		static Keyboard& m_Keyboard;
 		static Mouse& m_Mouse;
 	
-	
+		static bool m_Paused; 
 		std::vector<std::unique_ptr<class TestCube>> boxes;
 		// TODO: move to time class
 		std::chrono::steady_clock::time_point last = std::chrono::high_resolution_clock::now();

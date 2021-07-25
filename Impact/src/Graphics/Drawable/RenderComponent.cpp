@@ -1,4 +1,6 @@
 #include "RenderComponent.h"
+#include "Graphics/Bindable/Bindable.h"
+#include "Graphics/Bindable/IndexBuffer.h"
 
 namespace Impact
 {
@@ -6,6 +8,9 @@ namespace Impact
 	{
 		for ( auto& b : m_Binds )
 		{
+			b->Bind(gfx);
+		}
+		for (auto& b : GetStaticBinds()) {
 			b->Bind(gfx);
 		}
 		gfx.DrawIndexed(m_pIndexBuffer->GetCount());
@@ -16,7 +21,7 @@ namespace Impact
 		m_Binds.push_back(std::move(pBind));
 	}
 
-	void RenderComponent::AddIndexBuffer(std::unique_ptr<class IndexBuffer> pIdxBuffer) noexcept
+	void RenderComponent::AddIndexBuffer(std::unique_ptr<IndexBuffer> pIdxBuffer) noexcept
 	{
 		m_pIndexBuffer = pIdxBuffer.get();
 		m_Binds.push_back(std::move(pIdxBuffer));

@@ -315,7 +315,7 @@ namespace Impact
 	{
 		float aspectRation = ( float(m_ViewportHeight) / m_ViewportWidth );
 		DirectX::XMFLOAT4X4 projMatrix;
-		DirectX::XMStoreFloat4x4(&projMatrix, DirectX::XMMatrixPerspectiveLH(1.0f, aspectRation, 0.5f, 40.0f));
+		DirectX::XMStoreFloat4x4(&projMatrix, DirectX::XMMatrixPerspectiveLH(1.0f, aspectRation, 0.5f, 100.0f));
 		return projMatrix;
 	}
 }

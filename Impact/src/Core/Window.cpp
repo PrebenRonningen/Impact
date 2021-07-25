@@ -193,6 +193,13 @@ namespace Impact
 					m_Keyboard.ClearState();
 					break;
 				}
+			//TODO: Handle Resizing.
+			//case WM_SIZE:
+			//	{
+			//		//UINT width = LOWORD(lParam);
+			//		//UINT height = HIWORD(lParam);
+			//		//return 0;
+			//	}
 		#pragma region Keyboard
 			case WM_SYSKEYDOWN:
 			case WM_KEYDOWN:

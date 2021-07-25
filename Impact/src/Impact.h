@@ -1,3 +1,9 @@
 #pragma once
-#include "Core/Application.h"
-#include "Core/Layer.h"
+#include "Core\Application.h"
+#include "Core\Layer.h"
+#include "Scene\Scene.h"
+#include "Entity\Entity.h"
+#include "Components\RandomMovementComponent.h"
+#include "Graphics\Graphics.h"
+#include "Graphics\Drawable\TestCube.h"
+#include "Graphics\Drawable\Primitives\Primitive.h"

@@ -9,14 +9,16 @@
 #include "Graphics/Graphics.h"
 
 #include "Graphics/Drawable/TestCube.h"
-
+#include "Core\QuaternionToEuler.h"
 #include <sstream>
 #include <map>
 #include <algorithm>
 namespace Impact
 {
+	
 	static float m_Angle;
 	//Input& Application::m_Input = m_Input.Get();
+	bool Application::m_Paused = false;
 	Keyboard& Application::m_Keyboard = Keyboard::Get();
 	Mouse& Application::m_Mouse = Mouse::Get();
 	Application::Application()
@@ -42,18 +44,18 @@ namespace Impact
 
 
 
-		std::mt19937 rng(std::random_device{}( ));
-		std::uniform_real_distribution<float> adist(0.0f, 3.1415f * 2.0f);
-		std::uniform_real_distribution<float> ddist(0.0f, 3.1415f * 2.0f);
-		std::uniform_real_distribution<float> odist(0.0f, 3.1415f * 0.3f);
-		std::uniform_real_distribution<float> rdist(6.0f, 20.0f);
-		for ( auto i = 0; i < 80; i++ )
-		{
-			boxes.push_back(std::make_unique<TestCube>(
-				m_Window.GetGraphix(), rng, adist,
-				ddist, odist, rdist
-				));
-		}
+		//std::mt19937 rng(std::random_device{}( ));
+		//std::uniform_real_distribution<float> adist(0.0f, 3.1415f * 2.0f);
+		//std::uniform_real_distribution<float> ddist(0.0f, 3.1415f * 2.0f);
+		//std::uniform_real_distribution<float> odist(0.0f, 3.1415f * 0.3f);
+		//std::uniform_real_distribution<float> rdist(6.0f, 20.0f);
+		//for ( auto i = 0; i < 1; i++ )
+		//{
+		//	boxes.push_back(std::make_unique<TestCube>(
+		//		m_Window.GetGraphix(), rng, adist,
+		//		ddist, odist, rdist
+		//		));
+		//}
 	}
 	
 	Application::~Application()
@@ -83,16 +85,16 @@ namespace Impact
 		}
 	}
 	
-	void Application::PushLayer(Layer* layer) noexcept
+	void Application::PushLayer(Layer* layer) 
 	{
 		m_LayerStack.PushLayer(layer);
-		layer->OnAttach();
+		layer->OnAttach(m_Window.GetGraphix());
 	}
 	
 	void Application::PushOverlay(Layer* layer) noexcept
 	{
 		m_LayerStack.PushOverlay(layer);
-		layer->OnAttach();
+		layer->OnAttach(m_Window.GetGraphix());
 	}
 	
 	void Application::ProcessInput()
@@ -284,15 +286,15 @@ namespace Impact
 			k = 0;
 			acc-=1;
 		}
+		if (!m_Paused)
+			for ( Layer* layer : m_LayerStack )
+				layer->Update(dt);
 
-		for ( Layer* layer : m_LayerStack )
-			layer->Update(dt);
 
-
-		for ( auto& b : boxes )
-		{
-			b->Update(dt);
-		}
+		//for ( auto& b : boxes )
+		//{
+		//	b->Update(dt);
+		//}
 
 	}
 
@@ -305,12 +307,12 @@ namespace Impact
 		m_Window.GetGraphix().ClearBuffer( col );
 
 		for ( Layer* layer : m_LayerStack )
-			layer->Render();
+			layer->Render(m_Window.GetGraphix());
 
-		for ( auto& b : boxes )
-		{
-			b->Draw(m_Window.GetGraphix());
-		}
+		//for ( auto& b : boxes )
+		//{
+		//	b->Draw(m_Window.GetGraphix());
+		//}
 
 		m_Window.GetGraphix().Present();
 	}
@@ -324,6 +326,9 @@ namespace Impact
 			case Event::EventType::KeyPressed:
 					if(m_Keyboard.IsKeyDown('V'))
 						m_Window.GetGraphix().VSynchOnOff();
+
+					if(m_Keyboard.IsKeyDown(VK_SPACE))
+						m_Paused = !m_Paused;
 				break;
 
 			default:

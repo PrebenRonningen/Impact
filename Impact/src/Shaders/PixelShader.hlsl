@@ -13,5 +13,5 @@ struct PSInput
 
 float4 main(uint tid : SV_PrimitiveID) : SV_Target
 {
-	return face_Color[tid/2];
+	return face_Color[( tid / 2 ) % 6];
 }

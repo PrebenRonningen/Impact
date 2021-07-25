@@ -184,11 +184,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp" />
+    <ClCompile Include="TestLayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Impact\Impact.vcxproj">
       <Project>{ab57661f-e891-4ddb-ae1f-4a72dde1ec8a}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="TestLayer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

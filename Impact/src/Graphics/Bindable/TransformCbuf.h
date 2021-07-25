@@ -1,17 +1,16 @@
 #pragma once
-#include "Graphics/Bindable/Bindable.h"
-#include "Graphics/Bindable/ConstantBuffer.h"
-#include "Graphics/Drawable/RenderComponent.h"
-
+#include "Graphics\Bindable\Bindable.h"
+#include "Graphics\Bindable\ConstantBuffer.h"
+#include "Graphics\Drawable\RenderComponent.h"
+#include "Components\TransformComponent.h"
 namespace Impact
 {
 	class TransformCbuf : public Bindable
 	{
 	public:
-		TransformCbuf(Graphics& gfx, const RenderComponent& parent)
+		TransformCbuf(Graphics& gfx, const TransformComponent& parent)
 			: m_Parent{parent}
 		{
-			
 			if ( !m_pVcbuf )
 			{
 				m_pVcbuf = std::make_unique<ConstantBuffer<DirectX::XMFLOAT4X4>>(gfx,PipelineStage::VertexShader);
@@ -31,7 +30,8 @@ namespace Impact
 			m_pVcbuf->Bind(gfx);
 		}
 	private:
-		std::unique_ptr<ConstantBuffer<DirectX::XMFLOAT4X4>> m_pVcbuf;
-		const RenderComponent& m_Parent;
+		static std::unique_ptr<ConstantBuffer<DirectX::XMFLOAT4X4>> m_pVcbuf;
+		const TransformComponent& m_Parent;
 	};
+	std::unique_ptr<ConstantBuffer<DirectX::XMFLOAT4X4>> TransformCbuf::m_pVcbuf;
 }

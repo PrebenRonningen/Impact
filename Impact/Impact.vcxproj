@@ -187,6 +187,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Entity\Entity.cpp" />
     <ClCompile Include="src\Graphics\Bindable\PixelShader.cpp" />
     <ClCompile Include="src\Graphics\Bindable\ConstantBuffer.cpp" />
     <ClCompile Include="src\Graphics\Bindable\InputLayout.cpp" />
@@ -213,8 +214,14 @@
     <ClCompile Include="src\Graphics\Bindable\VertexBuffer.cpp" />
     <ClCompile Include="src\Graphics\Bindable\VertexShader.cpp" />
     <ClCompile Include="src\Graphics\Drawable\TestCube.cpp" />
+    <ClCompile Include="src\Scene\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Components\Component.h" />
+    <ClInclude Include="src\Components\RandomMovementComponent.h" />
+    <ClInclude Include="src\Components\TransformComponent.h" />
+    <ClInclude Include="src\Core\QuaternionToEuler.h" />
+    <ClInclude Include="src\Entity\Entity.h" />
     <ClInclude Include="src\Graphics\Bindable\PixelShader.h" />
     <ClInclude Include="src\Graphics\Bindable\ConstantBuffer.h" />
     <ClInclude Include="src\Graphics\Bindable\InputLayout.h" />
@@ -243,12 +250,16 @@
     <ClInclude Include="src\Graphics\Bindable\Bindable.h" />
     <ClInclude Include="src\Graphics\Bindable\Topology.h" />
     <ClInclude Include="src\Graphics\Bindable\TransformCbuf.h" />
+    <ClInclude Include="src\Graphics\Drawable\Primitives\IndexedTriangleList.h" />
+    <ClInclude Include="src\Graphics\Drawable\Primitives\Primitive.h" />
+    <ClInclude Include="src\Graphics\Drawable\RenderableBase.h" />
     <ClInclude Include="src\Graphics\Drawable\RenderComponent.h" />
     <ClInclude Include="src\Graphics\Graphics.h" />
     <ClInclude Include="src\Impact.h" />
     <ClInclude Include="src\Graphics\Bindable\VertexBuffer.h" />
     <ClInclude Include="src\Graphics\Bindable\VertexShader.h" />
     <ClInclude Include="src\Graphics\Drawable\TestCube.h" />
+    <ClInclude Include="src\Scene\Scene.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\PlanetIcon.ico" />
