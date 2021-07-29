@@ -1,7 +1,7 @@
 
 cbuffer CBuffer
 {
-	float4 face_Color[6];
+	float4 face_Color[8];
 }
 
 struct PSInput
@@ -13,5 +13,5 @@ struct PSInput
 
 float4 main(uint tid : SV_PrimitiveID) : SV_Target
 {
-	return face_Color[( tid / 2 ) % 6];
+	return face_Color[( tid / 2 ) % 8];
 }

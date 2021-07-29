@@ -4,11 +4,11 @@ cbuffer CBuffer
 	matrix transform;
 };
 
-//struct VSInput
-//{
-//	float3 pos		: POSITION;
+struct VSInput
+{
+	float3 pos		: POSITION;
 //	float4 color	: Color;
-//};
+};
 
 //struct VSOutput
 //{

@@ -1,40 +1,21 @@
-#include "TestCube.h"
-#include "Graphics/Bindable/VertexBuffer.h"
-//#include "Graphics/Bindable/IndexBuffer.h"
-#include "Graphics/Bindable/VertexShader.h"
-#include "Graphics/Bindable/PixelShader.h"
-#include "Graphics/Bindable/ConstantBuffer.h"
-#include "Graphics/Bindable/InputLayout.h"
-#include "Graphics/Bindable/Topology.h"
-#include "Graphics/Bindable/TransformCbuf.h"
-#include "Entity/Entity.h"
-#include "Graphics\Drawable\Primitives\Primitive.h"
+#include "UVSphere.h"
+#include "Primitive.h"
+#include "Graphics\Bindable\Bindables.h"
+#include "Entity\Entity.h"
+#include <random>
 namespace Impact
 {
-	TestCube::TestCube(Entity* pParent, Graphics& gfx)
+	UVSphere::UVSphere(Entity* pParent, Graphics& gfx, bool randomized)
 		: RenderableBase(pParent)
 	{
 		if (!IsStaticInitialized())
 		{
-			struct Vertex
-			{
-				DirectX::XMFLOAT3 pos;
-			};
-
-			auto model = Primitive::UVSphere::Create<Vertex>();
-
-
-			AddStaticBind(std::make_unique<VertexBuffer>(gfx, model.m_Vertices));
-
 			std::unique_ptr<VertexShader> pVS = std::make_unique<VertexShader>(gfx, "VertexShader.cso");
 			ID3DBlob* pVSbc = pVS->GetByteCode();
 
 			AddStaticBind(std::move(pVS));
 
 			AddStaticBind(std::make_unique<PixelShader>(gfx, "PixelShader.cso"));
-
-
-			AddStaticIndexBuffer(std::make_unique<IndexBuffer>(gfx, model.m_Indices));
 
 			struct colorConstBuffer
 			{
@@ -70,16 +51,33 @@ namespace Impact
 			AddStaticBind(std::make_unique<InputLayout>(gfx, inputElements, pVSbc));
 			AddStaticBind(std::make_unique<Topology>(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 		}
+
+		struct Vertex
+		{
+			DirectX::XMFLOAT3 pos;
+		};
+
+		IndexedTriangleList<Vertex> model;
+		if (randomized)
+		{
+			std::mt19937 rng(std::random_device{}());
+			std::uniform_real_distribution<float> radius(1, 6);
+			std::uniform_int_distribution<uint32_t> segmentsLat(8, 64);
+			std::uniform_int_distribution<uint32_t> segmentsLong(8, 64);
+			model = Primitive::UVSphere::CreateSegmented<Vertex>(radius(rng), segmentsLat(rng), segmentsLong(rng));
+		}
 		else
 		{
-			SetIndexFromStatic();
+			model = Primitive::UVSphere::Create<Vertex>();
 		}
+		AddBind(std::make_unique<VertexBuffer>(gfx, model.m_Vertices));
+		AddIndexBuffer(std::make_unique<IndexBuffer>(gfx, model.m_Indices));
+
 		AddBind(std::make_unique<TransformCbuf>(gfx, *pParent->GetComponent<TransformComponent>()));
 	}
 
-	void TestCube::Update(float dt) noexcept
+	void UVSphere::Update(float dt) noexcept
 	{
 		dt;
 	}
 }
-

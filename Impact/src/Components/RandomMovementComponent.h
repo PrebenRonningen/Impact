@@ -19,7 +19,7 @@ namespace Impact
 				std::uniform_real_distribution<float> adist(0.0f, 180 * 2.0f);
 				std::uniform_real_distribution<float> ddist(0.0f, 180 * 2.0f);
 				std::uniform_real_distribution<float> odist(0.0f, 180 * 0.3f);
-				std::uniform_real_distribution<float> rdist(6, 30);
+				std::uniform_real_distribution<float> rdist(12, 60);
 				r = rdist(rng);
 				droll = ddist(rng);
 				dpitch = ddist(rng);
@@ -49,7 +49,7 @@ namespace Impact
 			e->WorldRotation().x = theta;
 			e->WorldRotation().y = phi;
 			e->WorldRotation().z = chi;
-			e->WorldTranslation().z = 65;
+			e->WorldTranslation().z = 0;
 		}
 
 		private:

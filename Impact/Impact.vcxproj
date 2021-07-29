@@ -187,6 +187,9 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Graphics\Drawable\Primitives\IcoSphere.cpp" />
+    <ClCompile Include="src\Graphics\Drawable\Primitives\Plane.cpp" />
+    <ClCompile Include="src\Graphics\Drawable\Primitives\Cube.cpp" />
     <ClCompile Include="src\Entity\Entity.cpp" />
     <ClCompile Include="src\Graphics\Bindable\PixelShader.cpp" />
     <ClCompile Include="src\Graphics\Bindable\ConstantBuffer.cpp" />
@@ -209,14 +212,20 @@
     <ClCompile Include="src\Core\WinMain.h" />
     <ClCompile Include="src\Core\Window.cpp" />
     <ClCompile Include="src\Core\Exceptions\WindowException.cpp" />
+    <ClCompile Include="src\Graphics\Bindable\TransformCbuf.cpp" />
     <ClCompile Include="src\Graphics\Drawable\RenderComponent.cpp" />
     <ClCompile Include="src\Graphics\Graphics.cpp" />
     <ClCompile Include="src\Graphics\Bindable\VertexBuffer.cpp" />
     <ClCompile Include="src\Graphics\Bindable\VertexShader.cpp" />
     <ClCompile Include="src\Graphics\Drawable\TestCube.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
+    <ClCompile Include="src\Graphics\Drawable\Primitives\UVSphere.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Graphics\Drawable\Primitives\IcoSphere.h" />
+    <ClInclude Include="src\Graphics\Bindable\Bindables.h" />
+    <ClInclude Include="src\Graphics\Drawable\Primitives\Plane.h" />
+    <ClInclude Include="src\Graphics\Drawable\Primitives\Cube.h" />
     <ClInclude Include="src\Components\Component.h" />
     <ClInclude Include="src\Components\RandomMovementComponent.h" />
     <ClInclude Include="src\Components\TransformComponent.h" />
@@ -260,6 +269,7 @@
     <ClInclude Include="src\Graphics\Bindable\VertexShader.h" />
     <ClInclude Include="src\Graphics\Drawable\TestCube.h" />
     <ClInclude Include="src\Scene\Scene.h" />
+    <ClInclude Include="src\Graphics\Drawable\Primitives\UVSphere.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\PlanetIcon.ico" />

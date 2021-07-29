@@ -1,17 +1,11 @@
-#include "TestCube.h"
-#include "Graphics/Bindable/VertexBuffer.h"
-//#include "Graphics/Bindable/IndexBuffer.h"
-#include "Graphics/Bindable/VertexShader.h"
-#include "Graphics/Bindable/PixelShader.h"
-#include "Graphics/Bindable/ConstantBuffer.h"
-#include "Graphics/Bindable/InputLayout.h"
-#include "Graphics/Bindable/Topology.h"
-#include "Graphics/Bindable/TransformCbuf.h"
-#include "Entity/Entity.h"
-#include "Graphics\Drawable\Primitives\Primitive.h"
+#include "Cube.h"
+#include "Primitive.h"
+#include "Graphics\Bindable\Bindables.h"
+#include "Entity\Entity.h"
+
 namespace Impact
 {
-	TestCube::TestCube(Entity* pParent, Graphics& gfx)
+	Cube::Cube(Entity* pParent, Graphics& gfx, bool )
 		: RenderableBase(pParent)
 	{
 		if (!IsStaticInitialized())
@@ -21,8 +15,7 @@ namespace Impact
 				DirectX::XMFLOAT3 pos;
 			};
 
-			auto model = Primitive::UVSphere::Create<Vertex>();
-
+			IndexedTriangleList<Vertex> model = Primitive::Cube::Create<Vertex>();
 
 			AddStaticBind(std::make_unique<VertexBuffer>(gfx, model.m_Vertices));
 
@@ -77,9 +70,8 @@ namespace Impact
 		AddBind(std::make_unique<TransformCbuf>(gfx, *pParent->GetComponent<TransformComponent>()));
 	}
 
-	void TestCube::Update(float dt) noexcept
+	void Cube::Update(float dt) noexcept
 	{
 		dt;
 	}
 }
-

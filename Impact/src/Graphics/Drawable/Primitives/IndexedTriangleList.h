@@ -7,11 +7,11 @@ namespace Impact
 	struct IndexedTriangleList
 	{
 		IndexedTriangleList() = default;
-		IndexedTriangleList(std::vector<T> verts, std::vector<uint16_t> indices)
+		IndexedTriangleList(std::vector<T> verts, std::vector<uint32_t> indices)
 			: m_Vertices{verts}
 			, m_Indices{indices}{};
 	
 		std::vector<T> m_Vertices;
-		std::vector<uint16_t> m_Indices;
+		std::vector<uint32_t> m_Indices;
 	};
 }

@@ -14,12 +14,12 @@ namespace Impact
 		Entity& operator=(const Entity& other) = default;
 		Entity& operator=(Entity&& other);
 		template <typename T, typename... ARGS>
-		T& AddComponent(ARGS&&... args)
+		T* AddComponent(ARGS&&... args)
 		{
 			Entity* t = this;
 			T* component = new T(t, args...);
 			m_Components.push_back(component);
-			return *component;
+			return component;
 		};
 		template <typename T>
 		T* GetComponent()

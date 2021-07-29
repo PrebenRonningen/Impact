@@ -6,7 +6,7 @@ namespace Impact
 	class IndexBuffer : public Bindable
 	{
 	public:
-		IndexBuffer(Graphics& gfx, const std::vector<uint16_t>& indices);
+		IndexBuffer(Graphics& gfx, const std::vector<uint32_t>& indices);
 		virtual void Bind(Graphics& gfx) noexcept override;
 		uint32_t GetCount() const noexcept {return m_Count;};
 	private:

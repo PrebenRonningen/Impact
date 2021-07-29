@@ -272,6 +272,12 @@ namespace Impact
 			m_pRenderTargetView = nullptr;
 		}
 
+		if (m_pRasterState)
+		{
+			m_pRasterState->Release();
+			m_pRasterState = nullptr;
+		}
+
 		if ( m_pDeviceContext )
 		{
 			m_pDeviceContext->Release();
@@ -315,7 +321,59 @@ namespace Impact
 	{
 		float aspectRation = ( float(m_ViewportHeight) / m_ViewportWidth );
 		DirectX::XMFLOAT4X4 projMatrix;
-		DirectX::XMStoreFloat4x4(&projMatrix, DirectX::XMMatrixPerspectiveLH(1.0f, aspectRation, 0.5f, 100.0f));
+		DirectX::XMStoreFloat4x4(&projMatrix, DirectX::XMMatrixPerspectiveLH(1.0f, aspectRation, 0.5f, 1000.0f));
 		return projMatrix;
+	}
+	void Graphics::SetState(int state)
+	{
+		DirectX::XMVECTOR p0{-0.5f,0,0};
+		DirectX::XMVECTOR p1{-0.25f,0.5f,0};
+		DirectX::XMVECTOR p2{0.25f,0.5f,0};
+		DirectX::XMVECTOR p3{0.5f,0,0};
+
+
+		DirectX::XMFLOAT3 vecP;
+
+
+		DirectX::XMStoreFloat3(&vecP, DirectX::XMVectorCatmullRom(p0,p1,p2,p3, 0.5f));
+
+
+
+		
+
+		switch (state)
+		{
+			case 0:
+				{
+					D3D11_RASTERIZER_DESC rasterizerDesc{};
+					rasterizerDesc.FillMode = D3D11_FILL_SOLID;
+					rasterizerDesc.CullMode = D3D11_CULL_BACK;
+					rasterizerDesc.FrontCounterClockwise = false;
+					rasterizerDesc.DepthClipEnable = true;
+
+					GFX_EXCEPTION_NOINFO(__LINE__, __FILE__, m_pDevice->CreateRasterizerState(&rasterizerDesc, &m_pRasterState));
+					m_pDeviceContext->RSSetState(m_pRasterState);
+				}
+			break;
+			case 1:
+				{
+					D3D11_RASTERIZER_DESC rasterizerDesc{};
+					rasterizerDesc.FillMode = D3D11_FILL_WIREFRAME;
+					rasterizerDesc.CullMode = D3D11_CULL_NONE;
+					rasterizerDesc.FrontCounterClockwise = false;
+					rasterizerDesc.DepthClipEnable = true;
+
+					GFX_EXCEPTION_NOINFO(__LINE__, __FILE__, m_pDevice->CreateRasterizerState(&rasterizerDesc, &m_pRasterState));
+					m_pDeviceContext->RSSetState(m_pRasterState);
+				}
+			break;
+			default:
+				{
+					m_pDeviceContext->RSSetState(nullptr);
+					
+				}
+			break;
+		}
+
 	}
 }

@@ -32,6 +32,8 @@ namespace Impact
 		{
 			m_VSyncEnabled = !m_VSyncEnabled;
 		}; // temp
+		
+		void SetState(int state);
 
 	private:
 		void OnWindowResize(){};
@@ -42,6 +44,7 @@ namespace Impact
 	
 		ID3D11Device* m_pDevice = nullptr;
 		IDXGISwapChain* m_pSwapChain = nullptr;
+		ID3D11RasterizerState* m_pRasterState = nullptr;
 		ID3D11DeviceContext* m_pDeviceContext = nullptr;
 		ID3D11RenderTargetView* m_pRenderTargetView = nullptr;
 		ID3D11DepthStencilView* m_pDepthStencilView = nullptr;

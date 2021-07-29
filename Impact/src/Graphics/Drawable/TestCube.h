@@ -2,6 +2,7 @@
 
 #include "RenderableBase.h"
 #include <random>
+
 namespace Impact
 {
 	class Entity;

@@ -8,6 +8,7 @@
 #include "Events/MouseEvent.h"
 #include "Graphics/Graphics.h"
 
+#include "Graphics/Bindable/TransformCbuf.h"
 #include "Graphics/Drawable/TestCube.h"
 #include "Core\QuaternionToEuler.h"
 #include <sstream>
@@ -18,7 +19,7 @@ namespace Impact
 	
 	static float m_Angle;
 	//Input& Application::m_Input = m_Input.Get();
-	bool Application::m_Paused = false;
+	bool Application::m_Paused = true;
 	Keyboard& Application::m_Keyboard = Keyboard::Get();
 	Mouse& Application::m_Mouse = Mouse::Get();
 	Application::Application()
@@ -286,9 +287,57 @@ namespace Impact
 			k = 0;
 			acc-=1;
 		}
+		static float xpos = 0;
+		static float ypos = 0;
+		static float zpos = 65;
+
+		if (m_Keyboard.IsKeyDown('W')) {
+
+			zpos -= 10.f * dt;
+
+		}
+		if (m_Keyboard.IsKeyDown('S')) {
+
+			zpos += 10.f * dt;
+		}
+
+		if (m_Keyboard.IsKeyDown('A')) {
+
+			xpos += 10.f * dt;
+
+		}
+		if (m_Keyboard.IsKeyDown('D')) {
+
+			xpos -= 10.f * dt;
+		}
+
+		if (m_Keyboard.IsKeyDown('Q')) {
+
+			ypos -= 10.f * dt;
+
+		}
+		if (m_Keyboard.IsKeyDown('E')) {
+
+			ypos += 10.f * dt;
+		}
+
+
+		auto pos = DirectX::XMFLOAT3(xpos, ypos, zpos);
+		auto dir = DirectX::XMFLOAT3(0, 0, -1);
+		auto up = DirectX::XMFLOAT3(0, 1, 0);
+
+		DirectX::XMFLOAT4X4 mat;
+
+		DirectX::XMStoreFloat4x4(&mat, DirectX::XMMatrixLookToLH(DirectX::XMLoadFloat3(&pos), DirectX::XMLoadFloat3(&dir), DirectX::XMLoadFloat3(&up)));
+
+		TransformCbuf::SetCamera(mat);
+
+
 		if (!m_Paused)
 			for ( Layer* layer : m_LayerStack )
 				layer->Update(dt);
+
+
 
 
 		//for ( auto& b : boxes )
@@ -329,6 +378,23 @@ namespace Impact
 
 					if(m_Keyboard.IsKeyDown(VK_SPACE))
 						m_Paused = !m_Paused;
+
+
+					if (m_Keyboard.IsKeyDown('1'))
+					{
+						m_Window.GetGraphix().SetState(0);
+					}
+					if (m_Keyboard.IsKeyDown('2'))
+					{
+						m_Window.GetGraphix().SetState(1);
+					}
+					if (m_Keyboard.IsKeyDown('3'))
+					{
+						m_Window.GetGraphix().SetState(2);
+					}
+
+
+
 				break;
 
 			default:
