@@ -16,10 +16,10 @@ namespace Impact
 			:Component(pParent)
 			{
 				std::mt19937 rng(std::random_device{}());
-				std::uniform_real_distribution<float> adist(0.0f, 180 * 2.0f);
-				std::uniform_real_distribution<float> ddist(0.0f, 180 * 2.0f);
-				std::uniform_real_distribution<float> odist(0.0f, 180 * 0.3f);
-				std::uniform_real_distribution<float> rdist(12, 60);
+				std::uniform_real_distribution<float> adist(0, 0);//180 * 2.0f);
+				std::uniform_real_distribution<float> ddist(20, 60);
+				std::uniform_real_distribution<float> odist(0,0 );
+				std::uniform_real_distribution<float> rdist(0, 0);
 				r = rdist(rng);
 				droll = ddist(rng);
 				dpitch = ddist(rng);
@@ -30,16 +30,20 @@ namespace Impact
 				chi = adist(rng);
 				theta = adist(rng);
 				phi = adist(rng);
+				//roll = 45;
+				chi = 0;
+				theta = 20;
+				//chi = 90;
 			}
 			
 		virtual void Update(float dt) noexcept override
 		{
-			roll += droll * dt;
-			pitch += dpitch * dt;
+			//roll += droll * dt;
+			//pitch += dpitch * dt;
 			yaw += dyaw * dt;
-			theta += dtheta * dt;;
-			phi += dphi * dt;
-			chi += dchi * dt;
+			//theta += dtheta * dt;;
+			//phi += dphi * dt;
+			//chi += dchi * dt;
 
 			auto e = GetParent()->GetComponent<TransformComponent>();
 			e->Rotation().x = pitch;

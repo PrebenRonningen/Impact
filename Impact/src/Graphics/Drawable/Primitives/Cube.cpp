@@ -19,12 +19,12 @@ namespace Impact
 
 			AddStaticBind(std::make_unique<VertexBuffer>(gfx, model.m_Vertices));
 
-			std::unique_ptr<VertexShader> pVS = std::make_unique<VertexShader>(gfx, "VertexShader.cso");
+			std::unique_ptr<VertexShader> pVS = std::make_unique<VertexShader>(gfx, "ColorIndexVS.cso");
 			ID3DBlob* pVSbc = pVS->GetByteCode();
 
 			AddStaticBind(std::move(pVS));
 
-			AddStaticBind(std::make_unique<PixelShader>(gfx, "PixelShader.cso"));
+			AddStaticBind(std::make_unique<PixelShader>(gfx, "ColorIndexPS.cso"));
 
 
 			AddStaticIndexBuffer(std::make_unique<IndexBuffer>(gfx, model.m_Indices));

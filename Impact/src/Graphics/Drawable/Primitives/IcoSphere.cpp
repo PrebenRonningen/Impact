@@ -4,19 +4,28 @@
 #include "Graphics\Bindable\Bindables.h"
 #include "Entity\Entity.h"
 #include <random>
+#include "Graphics\Surface.h"
+
+#include "GDIManager.h"
 namespace Impact
 {
 	IcoSphere::IcoSphere(Entity* pParent, Graphics& gfx, bool randomized)
 		: RenderableBase(pParent)
 	{
+		GDIManager gdi{};
 		if (!IsStaticInitialized())
 		{
-			std::unique_ptr<VertexShader> pVS = std::make_unique<VertexShader>(gfx, "VertexShader.cso");
+			AddStaticBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/Earth16k.jpg")));
+
+			std::unique_ptr<VertexShader> pVS = std::make_unique<VertexShader>(gfx, "TextureVS.cso");
 			ID3DBlob* pVSbc = pVS->GetByteCode();
 
 			AddStaticBind(std::move(pVS));
 
-			AddStaticBind(std::make_unique<PixelShader>(gfx, "PixelShader.cso"));
+			AddStaticBind(std::make_unique<PixelShader>(gfx, "TexturePS.cso"));
+
+			AddStaticBind(std::make_unique<SamplerState>(gfx));
+
 
 			struct colorConstBuffer
 			{
@@ -46,7 +55,8 @@ namespace Impact
 
 			const std::vector<D3D11_INPUT_ELEMENT_DESC> inputElements =
 			{
-				{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
+				{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"TexCoord", 0,  DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0}
 			};
 
 			AddStaticBind(std::make_unique<InputLayout>(gfx, inputElements, pVSbc));
@@ -56,6 +66,7 @@ namespace Impact
 		struct Vertex
 		{
 			DirectX::XMFLOAT3 pos;
+			DirectX::XMFLOAT2 texCoord;
 		};
 
 		IndexedTriangleList<Vertex> model;
@@ -63,7 +74,7 @@ namespace Impact
 		{
 			std::mt19937 rng(std::random_device{}());
 			std::uniform_real_distribution<float> radius(1, 6);
-			std::uniform_int_distribution<int> recursionLevels(1, 4);
+			std::uniform_int_distribution<int> recursionLevels(0, 4);
 			model = Primitive::IcoSphere::CreateRecLeveled<Vertex>(radius(rng), recursionLevels(rng));
 		}
 		else

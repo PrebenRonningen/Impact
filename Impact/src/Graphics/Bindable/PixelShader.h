@@ -1,6 +1,5 @@
 #pragma once
 #include "Graphics/Bindable/Bindable.h"
-#include <filesystem>
 
 namespace Impact
 {
@@ -11,7 +10,6 @@ namespace Impact
 		virtual void Bind(Graphics& gfx) noexcept override;
 		ID3DBlob* GetByteCode() const noexcept;
 	private:
-		bool isSubDirectory(const std::filesystem::path& absolutePath, const std::filesystem::path& relativePath);
 		std::wstring m_Path;
 		Microsoft::WRL::ComPtr<ID3DBlob> m_pByteCodeBlob;
 		Microsoft::WRL::ComPtr<ID3D11PixelShader> m_pPixelShader;

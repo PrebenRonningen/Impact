@@ -187,6 +187,9 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Graphics\Bindable\BlendState.cpp" />
+    <ClCompile Include="src\Graphics\Bindable\SamplerState.cpp" />
+    <ClCompile Include="src\GDIManager.cpp" />
     <ClCompile Include="src\Graphics\Drawable\Primitives\IcoSphere.cpp" />
     <ClCompile Include="src\Graphics\Drawable\Primitives\Plane.cpp" />
     <ClCompile Include="src\Graphics\Drawable\Primitives\Cube.cpp" />
@@ -217,11 +220,17 @@
     <ClCompile Include="src\Graphics\Graphics.cpp" />
     <ClCompile Include="src\Graphics\Bindable\VertexBuffer.cpp" />
     <ClCompile Include="src\Graphics\Bindable\VertexShader.cpp" />
-    <ClCompile Include="src\Graphics\Drawable\TestCube.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Graphics\Drawable\Primitives\UVSphere.cpp" />
+    <ClCompile Include="src\Graphics\Surface.cpp" />
+    <ClCompile Include="src\Core\Exceptions\SurfaceException.cpp" />
+    <ClCompile Include="src\Graphics\Bindable\Texture.cpp" />
+    <ClCompile Include="src\Graphics\Drawable\Primitives\TexturePlane.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Graphics\Bindable\BlendState.h" />
+    <ClInclude Include="src\Graphics\Bindable\SamplerState.h" />
+    <ClInclude Include="src\GDIManager.h" />
     <ClInclude Include="src\Graphics\Drawable\Primitives\IcoSphere.h" />
     <ClInclude Include="src\Graphics\Bindable\Bindables.h" />
     <ClInclude Include="src\Graphics\Drawable\Primitives\Plane.h" />
@@ -267,9 +276,12 @@
     <ClInclude Include="src\Impact.h" />
     <ClInclude Include="src\Graphics\Bindable\VertexBuffer.h" />
     <ClInclude Include="src\Graphics\Bindable\VertexShader.h" />
-    <ClInclude Include="src\Graphics\Drawable\TestCube.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Graphics\Drawable\Primitives\UVSphere.h" />
+    <ClInclude Include="src\Graphics\Surface.h" />
+    <ClInclude Include="src\Core\Exceptions\SurfaceException.h" />
+    <ClInclude Include="src\Graphics\Bindable\Texture.h" />
+    <ClInclude Include="src\Graphics\Drawable\Primitives\TexturePlane.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\PlanetIcon.ico" />
@@ -283,7 +295,7 @@
     <None Include="src\Core\Exceptions\DXTrace.inl" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="src\Shaders\PixelShader.hlsl">
+    <FxCompile Include="src\Shaders\ColorIndexPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
@@ -297,7 +309,7 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="src\Shaders\VertexShader.hlsl">
+    <FxCompile Include="src\Shaders\ColorIndexVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
@@ -310,6 +322,26 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="src\Shaders\TexturePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Impact\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Impact\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Impact\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Impact\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="src\Shaders\TextureVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)Impact\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Impact\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Impact\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Impact\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

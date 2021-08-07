@@ -9,17 +9,17 @@
 #include "Graphics/Graphics.h"
 
 #include "Graphics/Bindable/TransformCbuf.h"
-#include "Graphics/Drawable/TestCube.h"
 #include "Core\QuaternionToEuler.h"
 #include <sstream>
 #include <map>
 #include <algorithm>
+
+
 namespace Impact
 {
-	
 	static float m_Angle;
 	//Input& Application::m_Input = m_Input.Get();
-	bool Application::m_Paused = true;
+	bool Application::m_Paused = false;
 	Keyboard& Application::m_Keyboard = Keyboard::Get();
 	Mouse& Application::m_Mouse = Mouse::Get();
 	Application::Application()
@@ -43,7 +43,7 @@ namespace Impact
 		EventHandler::RegisterEvent(0, Event::EventType::LPressed, onMove);
 		EventHandler::RegisterEvent(0, Event::EventType::LPressed | Event::EventType::LReleased, onMove);
 
-
+		
 
 		//std::mt19937 rng(std::random_device{}( ));
 		//std::uniform_real_distribution<float> adist(0.0f, 3.1415f * 2.0f);
@@ -289,36 +289,43 @@ namespace Impact
 		}
 		static float xpos = 0;
 		static float ypos = 0;
-		static float zpos = 65;
+		static float zpos = 850.0f;
+		static float speed = 100.f;
+		float speedMultiplyer = 1.f;
+
+		if (m_Keyboard.IsKeyDown(VK_SHIFT))
+		{
+			speedMultiplyer = 5.f;
+		}
 
 		if (m_Keyboard.IsKeyDown('W')) {
 
-			zpos -= 10.f * dt;
+			zpos -= speed * dt * speedMultiplyer;
 
 		}
 		if (m_Keyboard.IsKeyDown('S')) {
 
-			zpos += 10.f * dt;
+			zpos += speed * dt * speedMultiplyer;
 		}
 
 		if (m_Keyboard.IsKeyDown('A')) {
 
-			xpos += 10.f * dt;
+			xpos += speed * dt * speedMultiplyer;
 
 		}
 		if (m_Keyboard.IsKeyDown('D')) {
 
-			xpos -= 10.f * dt;
+			xpos -= speed * dt * speedMultiplyer;
 		}
 
 		if (m_Keyboard.IsKeyDown('Q')) {
 
-			ypos -= 10.f * dt;
+			ypos -= speed * dt * speedMultiplyer;
 
 		}
 		if (m_Keyboard.IsKeyDown('E')) {
 
-			ypos += 10.f * dt;
+			ypos += speed * dt * speedMultiplyer;
 		}
 
 

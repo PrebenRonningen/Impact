@@ -7,3 +7,6 @@
 #include "Graphics\Bindable\InputLayout.h"
 #include "Graphics\Bindable\Topology.h"
 #include "Graphics\Bindable\TransformCbuf.h"
+#include "Graphics\Bindable\SamplerState.h"
+#include "Graphics\Bindable\Texture.h"
+#include "Graphics\Bindable\BlendState.h"

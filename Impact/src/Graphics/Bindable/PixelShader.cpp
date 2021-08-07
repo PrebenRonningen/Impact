@@ -4,7 +4,8 @@
 #include <d3dcompiler.h>
 
 #pragma comment(lib,"D3DCompiler.lib")
-namespace Impact {
+namespace Impact
+{
 	PixelShader::PixelShader(Graphics& gfx, const std::string& path)
 	{
 		m_Path = L"../Impact/Resources/Shaders/";
@@ -31,11 +32,4 @@ namespace Impact {
 	{
 		return m_pByteCodeBlob.Get();
 	}
-	
-	bool PixelShader::isSubDirectory(const std::filesystem::path& absolutePath, const std::filesystem::path& relativePath)
-	{
-		auto it = std::search(absolutePath.begin(), absolutePath.end(), relativePath.begin(), relativePath.end());
-		return it != absolutePath.end();
-	}
-
 }
