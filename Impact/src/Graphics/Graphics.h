@@ -13,6 +13,7 @@ namespace Impact
 	class Graphics
 	{
 		friend class Bindable;
+		friend class ImguiLayer;
 	public:
 		Graphics(HWND hwnd, uint16_t width, uint16_t height);
 	#pragma region delete
@@ -31,15 +32,16 @@ namespace Impact
 		void VSynchOnOff()
 		{
 			m_VSyncEnabled = !m_VSyncEnabled;
-		}; // temp
-		
+		}; 
+		HWND GetWindowHandle() {return m_WindowHandle;}
+		// temp
 		void SetState(int state);
 
 	private:
 		void OnWindowResize(){};
 		uint16_t m_ViewportWidth;
 		uint16_t m_ViewportHeight;
-
+		HWND m_WindowHandle;
 		bool m_VSyncEnabled;
 	
 		ID3D11Device* m_pDevice = nullptr;

@@ -2,8 +2,9 @@
 #include "Graphics\Surface.h"
 namespace Impact
 {
-	Texture::Texture(Graphics& gfx, const Surface& surface)
+	Texture::Texture(Graphics& gfx, const Surface& surface, const int slot)
 	{
+		m_Slot = slot;
 		D3D11_TEXTURE2D_DESC textureDesc{};
 		textureDesc.Width = surface.GetWidth();
 		textureDesc.Height = surface.GetHeight();
@@ -31,6 +32,6 @@ namespace Impact
 	}
 	void Texture::Bind(Graphics& gfx) noexcept
 	{
-	GetContext(gfx)->PSSetShaderResources(0, 1, m_pTextureView.GetAddressOf());
+	GetContext(gfx)->PSSetShaderResources(m_Slot, 1, m_pTextureView.GetAddressOf());
 	}
 }

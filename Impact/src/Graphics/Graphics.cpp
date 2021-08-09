@@ -15,6 +15,7 @@ namespace Impact
 		: m_VSyncEnabled{ true }
 		, m_ViewportWidth{ width }
 		, m_ViewportHeight{ height }
+		, m_WindowHandle{ hwnd }
 	{
 		// Create a DirectX graphics interface factory.
 		Microsoft::WRL::ComPtr<IDXGIFactory> pFactory{};
@@ -321,7 +322,7 @@ namespace Impact
 	{
 		float aspectRation = ( float(m_ViewportHeight) / m_ViewportWidth );
 		DirectX::XMFLOAT4X4 projMatrix;
-		DirectX::XMStoreFloat4x4(&projMatrix, DirectX::XMMatrixPerspectiveLH(1.0f, aspectRation, 0.5f, 1000.0f));
+		DirectX::XMStoreFloat4x4(&projMatrix, DirectX::XMMatrixPerspectiveLH(1.0f, aspectRation, 0.5f, 2000.0f));
 		return projMatrix;
 	}
 	void Graphics::SetState(int state)

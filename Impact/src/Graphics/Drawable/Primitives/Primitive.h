@@ -292,13 +292,13 @@ namespace Impact
 		public:
 			// http://blog.andreaskahler.com/2009/06/creating-icosphere-mesh-in-code.html
 			// https://mft-dev.dk/uv-mapping-sphere/ helped for UV mapping
-			template <typename V>
-			static IndexedTriangleList<V> CreateRecLeveled( float rad, int recLevels)
+			template<typename V>
+			static IndexedTriangleList<V> CreateRecLeveled(float rad, int recLevels)
 			{
 				// golden ratio
 				const float gr = float((1.0 + sqrt(5.0)) / 2.0) * rad;
 
-				DirectX::XMVECTOR direction {rad, gr,0,0};
+				DirectX::XMVECTOR direction{ rad, gr,0,0 };
 				DirectX::XMVECTOR normalizedDirection = DirectX::XMVector2Normalize(direction);
 				DirectX::XMFLOAT2 nR;
 				DirectX::XMStoreFloat2(&nR, normalizedDirection);
@@ -327,19 +327,19 @@ namespace Impact
 					0,1,7,
 					0,7,10,
 					0,10,11,
-					
+
 					1,5,9,
 					5,11,4,
 					11,10,2,
 					10,7,6,
 					7,1,8,
-					
+
 					3,9,4,
 					3,4,2,
 					3,2,6,
 					3,6,8,
 					3,8,9,
-					
+
 					4,9,5,
 					2,4,11,
 					6,2,10,	// <- this one is ating weird
@@ -349,15 +349,15 @@ namespace Impact
 
 
 				int recursionLevel = recLevels;
-				for (int l{}; l < recursionLevel; ++l) 
+				for (int l{}; l < recursionLevel; ++l)
 				{
 					std::vector<uint32_t> newIndices{};
-					
-					for (uint32_t i{}; i < indices.size(); i += 3)
+
+					for (size_t i{}; i < indices.size(); i += 3)
 					{
 						uint32_t v1 = indices[i];
-						uint32_t v2 = indices[i+1];
-						uint32_t v3 = indices[i+2];
+						uint32_t v2 = indices[i + 1];
+						uint32_t v3 = indices[i + 2];
 
 						pos.push_back(GetMiddlePoint(pos[v1], pos[v2]));
 						pos.push_back(GetMiddlePoint(pos[v2], pos[v3]));
@@ -370,7 +370,7 @@ namespace Impact
 						newIndices.push_back(v2);
 						newIndices.push_back(uint32_t(pos.size() - 2));
 						newIndices.push_back(uint32_t(pos.size() - 3));
-						
+
 						newIndices.push_back(v3);
 						newIndices.push_back(uint32_t(pos.size() - 1));
 						newIndices.push_back(uint32_t(pos.size() - 2));
@@ -384,19 +384,19 @@ namespace Impact
 
 				std::vector<V> vertices;
 				vertices.resize(pos.size());
-				for (size_t i{}; i < pos.size(); ++i) 
-				{ 
+				for (size_t i{}; i < pos.size(); ++i)
+				{
 					DirectX::XMVECTOR nPos = DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&pos[i]));
 					DirectX::XMFLOAT3 fPos{};
 					DirectX::XMStoreFloat3(&fPos, nPos);
-					vertices[i].pos = {fPos.x * rad, fPos.y * rad, fPos.z * rad };
-					
+					vertices[i].pos = { fPos.x * rad, fPos.y * rad, fPos.z * rad };
+
 					vertices[i].texCoord.x = { (atan2f(fPos.z, fPos.x) / DirectX::g_XMTwoPi.f[0]) };
 					vertices[i].texCoord.y = { (acosf(fPos.y) / DirectX::g_XMPi.f[0]) };
 				}
 
 				// Detect wrapped  UV coordinates
-				std::vector<uint32_t> indicesUVcoords;
+				std::vector<uint32_t> tempIndices;
 
 				for (size_t i{}; i < indices.size(); i += 3)
 				{
@@ -414,17 +414,18 @@ namespace Impact
 					DirectX::XMStoreFloat3(&normal, DirectX::XMVector3Cross(DirectX::XMLoadFloat3(&BA), DirectX::XMLoadFloat3(&CA)));
 					if (normal.z < 0)
 					{
-						indicesUVcoords.push_back(uint32_t(i));
+						tempIndices.push_back(uint32_t(i));
 					}
 				}
 
-				uint32_t indx = uint32_t(vertices.size()-1);
-				for (size_t i{}; i < indicesUVcoords.size(); i++)
+				// duplicate and move the UV's that needs to be moved.
+				uint32_t indx = uint32_t(vertices.size() - 1);
+				for (size_t i{}; i < tempIndices.size(); i++)
 				{
-					uint32_t a = indices[indicesUVcoords[i]];
-					uint32_t b = indices[indicesUVcoords[i] + 1];
-					uint32_t c = indices[indicesUVcoords[i] + 2];
-				
+					uint32_t a = indices[(size_t)tempIndices[i]];
+					uint32_t b = indices[(size_t)tempIndices[i] + 1];
+					uint32_t c = indices[(size_t)tempIndices[i] + 2];
+
 					V A = vertices[a];
 					V B = vertices[b];
 					V C = vertices[c];
@@ -435,7 +436,7 @@ namespace Impact
 						vertices.push_back(A);
 						indx++;
 						a = indx;
-					} 
+					}
 					if (B.texCoord.x < 0.25f)
 					{
 						B.texCoord.x += 1;
@@ -450,19 +451,35 @@ namespace Impact
 						indx++;
 						c = indx;
 					}
-					indices[indicesUVcoords[i]] = a;
-					indices[indicesUVcoords[i] + 1] = b;
-					indices[indicesUVcoords[i] + 2] = c;
+					indices[(size_t)tempIndices[i]] = a;
+					indices[(size_t)tempIndices[i] + 1] = b;
+					indices[(size_t)tempIndices[i] + 2] = c;
+				}
+
+				//fix poles
+				for (size_t i{}; i < indices.size(); i++)
+				{
+					if (std::fabsf(vertices[indices[i]].pos.y) >= rad)
+					{
+						V B = vertices[indices[i + 1]];
+						V C = vertices[indices[i + 2]];
+						V newPole = vertices[indices[i]];
+						newPole.texCoord.x = (B.texCoord.x + C.texCoord.x) * 0.5f;
+						indx++;
+						vertices.push_back(newPole);
+						indices[i] = indx;
+					}
 				}
 
 				return { std::move(vertices), std::move(indices) };
 			};
+			
 
 
 			template <typename V>
 			static IndexedTriangleList<V> Create()
 			{
-				return CreateRecLeveled<V>(637.11f, 7);
+				return CreateRecLeveled<V>(637.11f, 6);
 			}
 			private:
 				static DirectX::XMFLOAT3 GetMiddlePoint(DirectX::XMFLOAT3 p1, DirectX::XMFLOAT3 p2)
@@ -472,4 +489,5 @@ namespace Impact
 		};
 	private:
 	};
+	
 }

@@ -9,10 +9,12 @@
 #include "Graphics/Graphics.h"
 
 #include "Graphics/Bindable/TransformCbuf.h"
-#include "Core\QuaternionToEuler.h"
+#include "Core/QuaternionToEuler.h"
 #include <sstream>
 #include <map>
 #include <algorithm>
+
+#include "Imgui/Layer/ImguiLayer.h"
 
 
 namespace Impact
@@ -57,6 +59,8 @@ namespace Impact
 		//		ddist, odist, rdist
 		//		));
 		//}
+		
+		PushOverlay(new ImguiLayer());
 	}
 	
 	Application::~Application()
@@ -88,6 +92,7 @@ namespace Impact
 	
 	void Application::PushLayer(Layer* layer) 
 	{
+		
 		m_LayerStack.PushLayer(layer);
 		layer->OnAttach(m_Window.GetGraphix());
 	}
@@ -344,14 +349,10 @@ namespace Impact
 			for ( Layer* layer : m_LayerStack )
 				layer->Update(dt);
 
-
-
-
 		//for ( auto& b : boxes )
 		//{
 		//	b->Update(dt);
 		//}
-
 	}
 
 	void Application::Render()
@@ -364,6 +365,17 @@ namespace Impact
 
 		for ( Layer* layer : m_LayerStack )
 			layer->Render(m_Window.GetGraphix());
+
+		ImGui_ImplDX11_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+
+		static bool show_demo_window = true;
+		if (show_demo_window) {
+			ImGui::ShowDemoWindow(&show_demo_window);
+		}
+		ImGui::Render();
+		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 		//for ( auto& b : boxes )
 		//{

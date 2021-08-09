@@ -17,6 +17,8 @@ namespace Impact
 		{
 			AddStaticBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/Earth16k.jpg")));
 
+			//AddStaticBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/uv_grid_2.png"), 1));
+
 			std::unique_ptr<VertexShader> pVS = std::make_unique<VertexShader>(gfx, "TextureVS.cso");
 			ID3DBlob* pVSbc = pVS->GetByteCode();
 

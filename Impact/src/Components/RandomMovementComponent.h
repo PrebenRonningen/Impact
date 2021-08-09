@@ -17,7 +17,7 @@ namespace Impact
 			{
 				std::mt19937 rng(std::random_device{}());
 				std::uniform_real_distribution<float> adist(0, 0);//180 * 2.0f);
-				std::uniform_real_distribution<float> ddist(20, 60);
+				std::uniform_real_distribution<float> ddist(5, 20);
 				std::uniform_real_distribution<float> odist(0,0 );
 				std::uniform_real_distribution<float> rdist(0, 0);
 				r = rdist(rng);
@@ -31,9 +31,8 @@ namespace Impact
 				theta = adist(rng);
 				phi = adist(rng);
 				//roll = 45;
+				//chi = -23.44f;
 				chi = 0;
-				theta = 20;
-				//chi = 90;
 			}
 			
 		virtual void Update(float dt) noexcept override

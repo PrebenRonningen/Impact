@@ -3,16 +3,17 @@
 #include "Debug/WindowsMessageMap.h"
 #endif // _DEBUG
 #include <sstream>
-#include "..\Resources\resource.h"
+#include "../Resources/resource.h"
 
 #include "Core/Exceptions/WindowThrow.h"
 #include "Core/Keyboard.h"
 #include "Core/Mouse.h"
 #include "Graphics/Graphics.h"
+#include "Imgui/imgui_impl_win32.h"
+//#include "backends/imgui_impl_dx11.h"
 
 namespace Impact
 {
-
 	//Window::UserData Window::m_Data{};
 	//Input& Window::m_Input = Input::Get();
 	std::vector<BYTE> Window::m_RawBuffer{};
@@ -171,6 +172,11 @@ namespace Impact
 	//	static WindowsMessageMap wmm;
 	//	OutputDebugStringA(wmm(uMsg, lParam, wParam).c_str());
 	//#endif// _DEBUG
+	// 
+		if (ImGui_ImplWin32_WndProcHandler(hwnd, uMsg, wParam, lParam))
+		{
+			return true;
+		}
 
 		switch ( uMsg )
 		{
