@@ -105,7 +105,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -128,7 +128,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -151,7 +151,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -174,7 +174,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(SolutionDir)ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -220,13 +220,6 @@
     <ClCompile Include="src\Graphics\Graphics.cpp" />
     <ClCompile Include="src\Graphics\Bindable\VertexBuffer.cpp" />
     <ClCompile Include="src\Graphics\Bindable\VertexShader.cpp" />
-    <ClCompile Include="src\Imgui\imgui.cpp" />
-    <ClCompile Include="src\Imgui\imgui_demo.cpp" />
-    <ClCompile Include="src\Imgui\imgui_draw.cpp" />
-    <ClCompile Include="src\Imgui\imgui_impl_dx11.cpp" />
-    <ClCompile Include="src\Imgui\imgui_impl_win32.cpp" />
-    <ClCompile Include="src\Imgui\imgui_tables.cpp" />
-    <ClCompile Include="src\Imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\Imgui\Layer\ImguiLayer.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Graphics\Drawable\Primitives\UVSphere.cpp" />
@@ -281,14 +274,6 @@
     <ClInclude Include="src\Graphics\Drawable\RenderableBase.h" />
     <ClInclude Include="src\Graphics\Drawable\RenderComponent.h" />
     <ClInclude Include="src\Graphics\Graphics.h" />
-    <ClInclude Include="src\Imgui\imconfig.h" />
-    <ClInclude Include="src\Imgui\imgui.h" />
-    <ClInclude Include="src\Imgui\imgui_impl_dx11.h" />
-    <ClInclude Include="src\Imgui\imgui_impl_win32.h" />
-    <ClInclude Include="src\Imgui\imgui_internal.h" />
-    <ClInclude Include="src\Imgui\imstb_rectpack.h" />
-    <ClInclude Include="src\Imgui\imstb_textedit.h" />
-    <ClInclude Include="src\Imgui\imstb_truetype.h" />
     <ClInclude Include="src\Imgui\Layer\ImguiLayer.h" />
     <ClInclude Include="src\Impact.h" />
     <ClInclude Include="src\Graphics\Bindable\VertexBuffer.h" />
@@ -360,6 +345,11 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Impact\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Impact\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ImGui\ImGui.vcxproj">
+      <Project>{b72f38db-8c00-4cc3-8e2e-4c478ba26c77}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -7,7 +7,9 @@ namespace Impact
 	class Mouse;
 	class MouseEvent : public Event
 	{
+		friend class Mouse;
 	public:
+		MouseEvent();
 		MouseEvent(EventType type, const Mouse& parent) noexcept;
 		virtual EventType GetType() const noexcept override;
 		std::pair<int, int> GetPos() const noexcept;
@@ -17,6 +19,8 @@ namespace Impact
 		bool RightIsPressed() const noexcept;
 	
 	private:
+		void Update(const Mouse& parent);
+
 		EventType m_EventType;
 		int m_PosX;
 		int m_PosY;

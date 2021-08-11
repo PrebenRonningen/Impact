@@ -15,7 +15,7 @@ namespace Impact
 		GDIManager gdi{};
 		if (!IsStaticInitialized())
 		{
-			AddStaticBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/Earth16k.jpg")));
+			AddStaticBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/uv_grid_2.png")));
 
 			//AddStaticBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/uv_grid_2.png"), 1));
 

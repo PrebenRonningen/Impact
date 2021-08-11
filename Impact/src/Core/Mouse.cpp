@@ -21,6 +21,7 @@ namespace Impact
 		bool m_RawEnabled = false;
 	
 		bool m_IsInWindow = false;
+		MouseEvent mEvent;
 
 		std::deque<MouseEvent> m_EventBuffer{};
 		std::deque<Mouse::RawDelta> m_RawDeltaBuffer{};
@@ -67,7 +68,7 @@ namespace Impact
 	{
 		if ( g_MouseData.m_EventBuffer.empty() )
 			return std::nullopt;
-
+		
 		MouseEvent et = std::move(g_MouseData.m_EventBuffer.front());
 		g_MouseData.m_EventBuffer.pop_front();
 		return et;
@@ -109,85 +110,137 @@ namespace Impact
 	}
 
 	void Mouse::OnMouseMove(int x, int y) noexcept
-	{
-		g_MouseData.m_PosX = x;
-		g_MouseData.m_PosY = y;
-
-		EventHandler::AddMouseEvent(std::move(MouseEvent{Event::EventType::Move, *this}));
+	{x;y;
+		//g_MouseData.m_PosX = x;
+		//g_MouseData.m_PosY = y;
+		//g_MouseData.mEvent.m_EventType = Event::EventType::Move;
+		//g_MouseData.mEvent.Update(*this);
+		//EventHandler::AddMouseEvent(g_MouseData.mEvent);
+		
+		//EventHandler::AddMouseEvent(std::move(MouseEvent{ Event::EventType::Move, *this }));
 	}
 
 	void Mouse::OnRawDelta(int dx, int dy) noexcept
 	{
-		g_MouseData.m_RawDeltaBuffer.push_back(std::move(RawDelta{dx, dy}));
-		TrimRawInputBuffer();
+	dx;dy;
+		//g_MouseData.m_RawDeltaBuffer.push_back(std::move(RawDelta{dx, dy}));
+		//TrimRawInputBuffer();
 	}
 
 	void Mouse::OnMouseLeave() noexcept
 	{
-		g_MouseData.m_IsInWindow = false;
-		EventHandler::AddMouseEvent(std::move(MouseEvent{Event::EventType::Leave, *this}));
+		//g_MouseData.m_IsInWindow = false;
+		//g_MouseData.mEvent.m_EventType = Event::EventType::Leave;
+		//g_MouseData.mEvent.Update(*this);
+		//EventHandler::AddMouseEvent(g_MouseData.mEvent);
+		
+		//EventHandler::AddMouseEvent(std::move(MouseEvent{ Event::EventType::Leave, *this }));
 	}
 
 	void Mouse::OnMouseEnter() noexcept
 	{
-		g_MouseData.m_IsInWindow = true;
-		EventHandler::AddMouseEvent(std::move(MouseEvent{Event::EventType::Enter, *this}));
+		//g_MouseData.m_IsInWindow = true;
+		//g_MouseData.mEvent.m_EventType = Event::EventType::Enter;
+		//g_MouseData.mEvent.Update(*this);
+		//EventHandler::AddMouseEvent(g_MouseData.mEvent);
+		
+		//EventHandler::AddMouseEvent(std::move(MouseEvent{ Event::EventType::Enter, *this}));
 	}
 
 	void Mouse::OnLeftPressed(int /*x*/ , int /*y*/) noexcept
 	{
-		g_MouseData.m_IsLeftPressed = true;
-		EventHandler::AddMouseEvent(std::move(MouseEvent{Event::EventType::LPressed, *this}));
+		//g_MouseData.m_IsLeftPressed = true;
+		//g_MouseData.mEvent.m_EventType = Event::EventType::LPressed;
+		//g_MouseData.mEvent.Update(*this);
+		//EventHandler::AddMouseEvent(g_MouseData.mEvent);
+
+		//EventHandler::AddMouseEvent(std::move(MouseEvent{ Event::EventType::LPressed, *this }));
 	}
 
 	void Mouse::OnLeftReleased(int /*x*/, int /*y*/) noexcept
 	{
-		g_MouseData.m_IsLeftPressed = false;
-		EventHandler::AddMouseEvent(std::move(MouseEvent{Event::EventType::LReleased, *this}));
+		//g_MouseData.m_IsLeftPressed = false;
+		//g_MouseData.mEvent.m_EventType = Event::EventType::LReleased;
+		//g_MouseData.mEvent.Update(*this);
+		//EventHandler::AddMouseEvent(g_MouseData.mEvent);
+
+		//EventHandler::AddMouseEvent(std::move(MouseEvent{ Event::EventType::LReleased, *this }));
 	}
 
 	void Mouse::OnRightPressed(int /*x*/, int /*y*/) noexcept
 	{
-		g_MouseData.m_IsRightPressed = true;
-		EventHandler::AddMouseEvent(std::move(MouseEvent{Event::EventType::RPressed, *this}));
+		//g_MouseData.m_IsRightPressed = true;
+		//g_MouseData.mEvent.m_EventType = Event::EventType::RPressed;
+		//g_MouseData.mEvent.Update(*this);
+		//EventHandler::AddMouseEvent(g_MouseData.mEvent);
+
+		//EventHandler::AddMouseEvent(std::move(MouseEvent{ Event::EventType::RPressed, *this }));
 	}
 
 	void Mouse::OnRightReleased(int /*x*/, int /*y*/) noexcept
 	{
-		g_MouseData.m_IsRightPressed = false;
-		EventHandler::AddMouseEvent(std::move(MouseEvent{Event::EventType::RReleased, *this}));
+		//g_MouseData.m_IsRightPressed = false;
+		//g_MouseData.mEvent.m_EventType = Event::EventType::RReleased;
+		//g_MouseData.mEvent.Update(*this);
+		//EventHandler::AddMouseEvent(g_MouseData.mEvent);
+
+		//EventHandler::AddMouseEvent(std::move(MouseEvent{ Event::EventType::RReleased, *this }));
 	}
 
 	void Mouse::OnMiddlePressed(int /*x*/, int /*y*/) noexcept
 	{
-		g_MouseData.m_IsMiddlePressed = true;
-		EventHandler::AddMouseEvent(std::move(MouseEvent{Event::EventType::MPressed, *this}));
+		//g_MouseData.m_IsMiddlePressed = true;
+		//g_MouseData.mEvent.m_EventType = Event::EventType::MPressed;
+		//g_MouseData.mEvent.Update(*this);
+		//EventHandler::AddMouseEvent(g_MouseData.mEvent);
+
+		//EventHandler::AddMouseEvent(std::move(MouseEvent{ Event::EventType::MPressed, *this }));
 	}
 
 	void Mouse::OnMiddleReleased(int /*x*/, int /*y*/) noexcept
 	{
-		g_MouseData.m_IsMiddlePressed = false;
-		EventHandler::AddMouseEvent(std::move(MouseEvent{Event::EventType::MReleased, *this}));
+		//g_MouseData.m_IsMiddlePressed = false;
+		//g_MouseData.mEvent.m_EventType = Event::EventType::MReleased;
+		//g_MouseData.mEvent.Update(*this);
+		//EventHandler::AddMouseEvent(g_MouseData.mEvent);
+
+		//EventHandler::AddMouseEvent(std::move(MouseEvent{ Event::EventType::MReleased, *this }));
 	}
 
 	void Mouse::OnWheelUp(int /*x*/, int /*y*/) noexcept
 	{
-		EventHandler::AddMouseEvent(std::move(MouseEvent{Event::EventType::WheelUp, *this}));
+		//g_MouseData.mEvent.m_EventType = Event::EventType::WheelUp;
+		//g_MouseData.mEvent.Update(*this);
+		//EventHandler::AddMouseEvent(g_MouseData.mEvent);
+
+		//EventHandler::AddMouseEvent(std::move(MouseEvent{ Event::EventType::WheelUp, *this }));
 	}
 
 	void Mouse::OnWheelDown(int /*x*/, int /*y*/) noexcept
 	{
-		EventHandler::AddMouseEvent(std::move(MouseEvent{Event::EventType::WheelDown, *this}));
+		//g_MouseData.mEvent.m_EventType = Event::EventType::WheelDown;
+		//g_MouseData.mEvent.Update(*this);
+		//EventHandler::AddMouseEvent(g_MouseData.mEvent);
+
+		//EventHandler::AddMouseEvent(std::move(MouseEvent{ Event::EventType::WheelDown, *this }));
 	}
 
 	void Mouse::OnWheelLeft(int /*x*/, int /*y*/) noexcept
 	{
-		EventHandler::AddMouseEvent(std::move(MouseEvent{Event::EventType::WheelLeft, *this}));
+		//g_MouseData.mEvent.m_EventType = Event::EventType::WheelLeft;
+		//g_MouseData.mEvent.Update(*this);
+		//EventHandler::AddMouseEvent(g_MouseData.mEvent);
+
+		//EventHandler::AddMouseEvent(std::move(MouseEvent{ Event::EventType::WheelLeft, *this }));
 	}
 
 	void Mouse::OnWheelRight(int /*x*/, int /*y*/) noexcept
 	{
-		EventHandler::AddMouseEvent(std::move(MouseEvent{Event::EventType::WheelRight, *this}));
+		//g_MouseData.mEvent.m_EventType = Event::EventType::WheelRight;
+		//g_MouseData.mEvent.Update(*this);
+		//EventHandler::AddMouseEvent(g_MouseData.mEvent);
+
+		//EventHandler::AddMouseEvent(std::move(MouseEvent{ Event::EventType::WheelRight, *this }));
 	}
 
 	void Mouse::OnWheelDelta(int x, int y, int deltaX, int deltaY) noexcept

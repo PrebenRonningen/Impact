@@ -111,6 +111,10 @@
     <FxCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)Impact\Resources\Shaders\</AdditionalIncludeDirectories>
     </FxCompile>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -137,6 +141,10 @@
     <FxCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)Impact\Resources\Shaders\</AdditionalIncludeDirectories>
     </FxCompile>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -159,6 +167,10 @@
     <FxCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)Impact\Resources\Shaders\</AdditionalIncludeDirectories>
     </FxCompile>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -185,12 +197,19 @@
     <FxCompile>
       <AdditionalIncludeDirectories>$(SolutionDir)Impact\Resources\Shaders\</AdditionalIncludeDirectories>
     </FxCompile>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="TestLayer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ImGui\ImGui.vcxproj">
+      <Project>{b72f38db-8c00-4cc3-8e2e-4c478ba26c77}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Impact\Impact.vcxproj">
       <Project>{ab57661f-e891-4ddb-ae1f-4a72dde1ec8a}</Project>
     </ProjectReference>

@@ -13,7 +13,8 @@
 #include <sstream>
 #include <map>
 #include <algorithm>
-
+#include <numeric>
+#include <array>
 #include "Imgui/Layer/ImguiLayer.h"
 
 
@@ -24,6 +25,10 @@ namespace Impact
 	bool Application::m_Paused = false;
 	Keyboard& Application::m_Keyboard = Keyboard::Get();
 	Mouse& Application::m_Mouse = Mouse::Get();
+	static bool m_mouseMoved = false;
+	std::array<int, 20> fpsS{};
+	int fpsSidx = 0;
+	bool filled = false;
 	Application::Application()
 		: m_Window{ 1280u, 720u, L"Impact 3D" }
 		, m_LayerStack{}
@@ -275,27 +280,65 @@ namespace Impact
 		//		}
 		//	}
 	}
-	
-	void Application::Update(float dt)
-	{
-		static int k = 0;
-		static float acc =0;
-		k++;
-		acc += dt;
-		if ( acc >= 1 )
-		{
-			const std::wstring fps = std::to_wstring(k).append(L"\n");
-			OutputDebugString(fps.c_str());
-			//250-400+
-			//290-480
-			//m_Window.SetTitle(fps);
-			k = 0;
-			acc-=1;
-		}
+		static std::string fps{};
+		static int count = 0;
+		static float acc = 0;
 		static float xpos = 0;
 		static float ypos = 0;
 		static float zpos = 850.0f;
 		static float speed = 100.f;
+
+		static float max = FLT_MIN;
+		static float min = FLT_MAX;
+		static float avg = 0.f;
+		static float fs = 0;
+		static bool m_log = false;
+
+	void Application::Update(float dt)
+	{
+		count++;
+		acc += dt;
+		if ( acc >= 1 )
+		{
+			//const std::wstring fps = std::to_wstring(k).append(L"\n");
+			//OutputDebugString(fps.c_str());
+
+			if (m_mouseMoved) {
+				fpsS[fpsSidx %= 20] = count;
+				fpsSidx++;
+				if (filled)
+				{
+					avg = fs = std::accumulate(fpsS.begin(), fpsS.end(), 0) / 20.f;
+					max = std::max(fs, max);
+					min = std::min(fs, min);
+
+				//	fps = std::to_string(fs).append("\n");
+				//	OutputDebugStringA(fps.c_str());
+				}
+				else 
+				{
+					if (fpsSidx == 20)
+					{
+						filled = true;
+						OutputDebugStringA("Mark");
+					}
+				}
+			}
+
+			if (m_log)
+			{
+				std::ostringstream oss;
+				oss << "min: " << min << ", avg: " << avg << ", max: " << max << "\n";
+				OutputDebugStringA(oss.str().c_str());
+				m_log = false;
+			}
+			//250-400+
+			//290-480
+			//m_Window.SetTitle(fps);
+			count = 0;
+			acc-=1;
+		}
+
 		float speedMultiplyer = 1.f;
 
 		if (m_Keyboard.IsKeyDown(VK_SHIFT))
@@ -412,8 +455,10 @@ namespace Impact
 						m_Window.GetGraphix().SetState(2);
 					}
 
-
-
+					if(m_Keyboard.IsKeyDown('F'))
+						m_mouseMoved = true;
+					if(m_Keyboard.IsKeyDown('G'))
+						m_log = true;
 				break;
 
 			default:
@@ -430,6 +475,7 @@ namespace Impact
 		switch ( m.GetType() )
 		{
 			case Event::EventType::LPressed:
+					m_log = true;
 				break;
 			case Event::EventType::LReleased:
 				break;
@@ -451,6 +497,7 @@ namespace Impact
 				break;
 			case Event::EventType::Move:
 				{
+				//	m_mouseMoved = true;
 				//	#ifdef NDEBUG
 				//	std::wostringstream oss;
 				//	oss << L"Mouse Position: (" << m.GetPosX() << L", " << m.GetPosY() << L")\n";

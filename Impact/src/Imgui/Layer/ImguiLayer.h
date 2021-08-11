@@ -1,9 +1,9 @@
 #pragma once
 #include "Core\Layer.h"
 
-#include "Imgui/imgui.h"
-#include "Imgui/imgui_impl_win32.h"
-#include "Imgui/imgui_impl_dx11.h"
+#include <imgui.h>
+#include <imgui_impl_win32.h>
+#include <imgui_impl_dx11.h>
 
 namespace Impact
 {

@@ -5,9 +5,10 @@
 
 namespace Impact
 {
-	static constexpr uint8_t m_BufferSize = 16u;
 	std::deque<KeyEvent> EventHandler::m_KeyBuffer{};
-	std::deque<MouseEvent> EventHandler::m_MouseBuffer{};
+	std::array<MouseEvent, EventHandler::m_BufferSize> EventHandler::m_MouseBuffer{};
+	
+	uint8_t m_MouseIndex{0};
 	std::map<int, std::vector<std::pair<uint16_t, std::function<bool(Event&)>>>> EventHandler::m_LayerCallback{};
 	uint16_t EventHandler::m_RegisteredEventTypes{0};
 	static uint16_t eT{};
@@ -17,14 +18,14 @@ namespace Impact
 		TrimBuffer(m_KeyBuffer);
 	}
 
-	void EventHandler::AddMouseEvent(MouseEvent&& event) noexcept
+	void EventHandler::AddMouseEvent(const MouseEvent& event) noexcept
 	{
-		m_MouseBuffer.push_back(std::move(event));
-		TrimBuffer(m_MouseBuffer);
+			m_MouseBuffer[(m_MouseIndex < m_BufferSize) ? m_MouseIndex++ : m_BufferSize-1] = event;
 	}
 
 	void EventHandler::RegisterEvent(int layer, const Event::EventType eventType, const std::function<bool(Event&)>& callback) noexcept
 	{
+	//	m_MouseBuffer.resize(m_BufferSize);
 		auto it = m_LayerCallback.find(layer);
 		if ( it != m_LayerCallback.end() )
 		{
@@ -53,20 +54,20 @@ namespace Impact
 
 	void EventHandler::ProcessEvent() noexcept
 	{
+		static KeyEvent* kEvent = nullptr;
 		while ( !m_KeyBuffer.empty())
 		{
-			static KeyEvent* kEvent = std::move(&m_KeyBuffer.front());
+			kEvent = std::move(&m_KeyBuffer.front());
 			m_KeyBuffer.pop_front();
 
 			HandleEvent(kEvent);
 		}
-		while ( !m_MouseBuffer.empty() )
+
+		for (uint8_t i{ 0 }; i < m_MouseIndex; ++i)
 		{
-			static MouseEvent* mEvent = std::move(&m_MouseBuffer.front());
-			m_MouseBuffer.pop_front();
-	
-			HandleEvent(mEvent);
+			HandleEvent(&m_MouseBuffer[i]);
 		}
+		m_MouseIndex = 0;
 	}
 
 	void EventHandler::HandleEvent(Event* event) noexcept

@@ -9,7 +9,7 @@
 #include "Core/Keyboard.h"
 #include "Core/Mouse.h"
 #include "Graphics/Graphics.h"
-#include "Imgui/imgui_impl_win32.h"
+#include <imgui_impl_win32.h>
 //#include "backends/imgui_impl_dx11.h"
 
 namespace Impact
