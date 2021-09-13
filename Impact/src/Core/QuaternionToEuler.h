@@ -6,19 +6,20 @@ struct Double3 {
 	double x, y, z;
 };
 
-void twoaxisrot(double r11, double r12, double r21, double r31, double r32, Double3& res) {
+static void twoaxisrot(double r11, double r12, double r21, double r31, double r32, Double3& res) {
 	res.x = atan2(r11, r12);
 	res.y = acos(r21);
 	res.z = atan2(r31, r32);
 }
 
 
-void threeaxisrot(double r11, double r12, double r21, double r31, double r32, Double3& res) {
+static void threeaxisrot(double r11, double r12, double r21, double r31, double r32, Double3& res) {
 	res.y = atan2(r11, r12);
 	res.x = asin(r21);
 	res.z = atan2(r31, r32);
 }
-DirectX::XMFLOAT3 QuaternionToEuler(DirectX::XMFLOAT4 q, RotSeq rotSeq = RotSeq::yxz)
+
+static DirectX::XMFLOAT3 QuaternionToEulerRad(DirectX::XMFLOAT4 q, RotSeq rotSeq = RotSeq::yxz)
 {
 	Double3 res{};
 
@@ -135,4 +136,10 @@ DirectX::XMFLOAT3 QuaternionToEuler(DirectX::XMFLOAT4 q, RotSeq rotSeq = RotSeq:
 	}
 
 	return DirectX::XMFLOAT3{ float(res.x), float(res.y), float(res.z) };
+}
+
+static DirectX::XMFLOAT3 QuaternionToEulerDeg(DirectX::XMFLOAT4 q, RotSeq rotSeq = RotSeq::yxz)
+{
+	DirectX::XMFLOAT3 res = QuaternionToEulerRad(q, rotSeq);
+	return DirectX::XMFLOAT3{ DirectX::XMConvertToDegrees(float(res.x)), DirectX::XMConvertToDegrees(float(res.y)), DirectX::XMConvertToDegrees(float(res.z)) };
 }

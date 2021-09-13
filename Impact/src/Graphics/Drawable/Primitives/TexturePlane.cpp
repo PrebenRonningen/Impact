@@ -9,7 +9,7 @@
 namespace Impact {
 	
 
-	TexturePlane::TexturePlane(Entity* pParent, Graphics& gfx, bool)
+	TexturePlane::TexturePlane(Entity* pParent, Graphics& gfx)
 		: RenderableBase(pParent)
 	{
 		GDIManager gdi{};

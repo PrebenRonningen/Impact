@@ -21,6 +21,7 @@ namespace Impact
 			m_Components.push_back(component);
 			return component;
 		};
+
 		template <typename T>
 		T* GetComponent()
 		{

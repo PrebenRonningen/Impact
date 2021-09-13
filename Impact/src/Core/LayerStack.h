@@ -10,7 +10,7 @@ namespace Impact
 	{
 	public:
 		LayerStack()
-		:m_Layers{}
+		: m_Layers{}
 		, m_LayerInsertIndex{0}
 		{}
 		~LayerStack();
@@ -57,6 +57,5 @@ namespace Impact
 	private:
 		std::vector<Layer*> m_Layers;
 		unsigned int m_LayerInsertIndex;
-
 	};
 }

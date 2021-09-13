@@ -7,7 +7,7 @@ namespace Impact
 	class Plane : public RenderableBase<Plane>
 	{
 	public:
-		Plane(Entity* pParent, Graphics& gfx, bool randomized = false);
+		Plane(Entity* pParent, Graphics& gfx);
 		virtual void Update(float dt) noexcept override;
 
 	private:

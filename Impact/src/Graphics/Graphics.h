@@ -8,6 +8,7 @@
 #include <wrl.h>
 
 #include <vector>
+
 namespace Impact
 {
 	class Graphics

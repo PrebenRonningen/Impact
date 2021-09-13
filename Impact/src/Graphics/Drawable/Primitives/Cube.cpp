@@ -5,7 +5,7 @@
 
 namespace Impact
 {
-	Cube::Cube(Entity* pParent, Graphics& gfx, bool )
+	Cube::Cube(Entity* pParent, Graphics& gfx)
 		: RenderableBase(pParent)
 	{
 		if (!IsStaticInitialized())

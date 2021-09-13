@@ -1,9 +1,15 @@
 #include "ImguiLayer.h"
 
 #include "Graphics/Graphics.h"
+
+#include <imgui_impl_win32.h>
+#include <imgui_impl_dx11.h>
 namespace Impact
 {
 	ImguiLayer::ImguiLayer()
+		: m_Enabled{true}
+		, show_demo_window{true}
+		, m_SpeedFactor{1.f}
 	{
 	}
 	void ImguiLayer::OnAttach(Impact::Graphics& gfx)
@@ -23,10 +29,46 @@ namespace Impact
 	}
 	void ImguiLayer::Update(float dt) noexcept
 	{
+		if (!m_Enabled) return;
 		dt;
 	}
-	void ImguiLayer::Render(Graphics& gfx) const noexcept
+	static char buffer[1024];
+	void ImguiLayer::Render(Graphics& ) noexcept
 	{
-		gfx;
+
+	}
+	void ImguiLayer::ImGuiRender() noexcept
+	{
+		if (!m_Enabled) return;
+		if (ImGui::Begin("Simulation Speed"))
+		{
+			ImGui::SliderFloat("Speed Factor", &m_SpeedFactor, 0.0f, 5.0f);
+			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+			ImGui::InputText("Button", buffer, sizeof(buffer));
+		}
+		ImGui::End();
+	}
+	void ImguiLayer::Begin()
+	{
+		ImGui_ImplDX11_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+	}
+	void ImguiLayer::End()
+	{
+		ImGui::Render();
+		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	}
+	void ImguiLayer::Dissable()
+	{
+		m_Enabled = false;
+	}
+	void ImguiLayer::Enable()
+	{
+		m_Enabled = true;
+	}
+	bool ImguiLayer::IsEnabled()
+	{
+		return m_Enabled;
 	}
 }

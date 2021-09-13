@@ -229,6 +229,8 @@
     <ClCompile Include="src\Graphics\Drawable\Primitives\TexturePlane.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Components\CameraComponent.h" />
+    <ClInclude Include="src\Components\MovementComponent.h" />
     <ClInclude Include="src\Graphics\Bindable\BlendState.h" />
     <ClInclude Include="src\Graphics\Bindable\SamplerState.h" />
     <ClInclude Include="src\GDIManager.h" />

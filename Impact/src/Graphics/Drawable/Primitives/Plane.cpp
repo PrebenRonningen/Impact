@@ -6,7 +6,7 @@
 #include <random>
 namespace Impact
 {
-	Plane::Plane(Entity* pParent, Graphics& gfx, bool randomized)
+	Plane::Plane(Entity* pParent, Graphics& gfx)
 		: RenderableBase(pParent)
 	{
 		if (!IsStaticInitialized())
@@ -59,17 +59,9 @@ namespace Impact
 		};
 
 		IndexedTriangleList<Vertex> model;
-		if (randomized)
-		{
-			std::mt19937 rng(std::random_device{}());
-			std::uniform_int_distribution<uint16_t> divX(1, 8);
-			std::uniform_int_distribution<uint16_t> divY(1, 8);
-			model = Primitive::Plane::CreateSubDivided<Vertex>(divX(rng), divY(rng));
-		}
-		else
-		{
-			model = Primitive::Plane::Create<Vertex>();
-		}
+
+		model = Primitive::Plane::Create<Vertex>();
+
 		AddBind(std::make_unique<VertexBuffer>(gfx, model.m_Vertices));
 		AddIndexBuffer(std::make_unique<IndexBuffer>(gfx, model.m_Indices));
 

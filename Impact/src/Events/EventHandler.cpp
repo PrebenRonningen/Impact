@@ -18,9 +18,9 @@ namespace Impact
 		TrimBuffer(m_KeyBuffer);
 	}
 
-	void EventHandler::AddMouseEvent(const MouseEvent& event) noexcept
+	void EventHandler::AddMouseEvent( MouseEvent&& event) noexcept
 	{
-			m_MouseBuffer[(m_MouseIndex < m_BufferSize) ? m_MouseIndex++ : m_BufferSize-1] = event;
+			m_MouseBuffer[(m_MouseIndex < m_BufferSize) ? m_MouseIndex++ : m_BufferSize-1] = std::move(event);
 	}
 
 	void EventHandler::RegisterEvent(int layer, const Event::EventType eventType, const std::function<bool(Event&)>& callback) noexcept

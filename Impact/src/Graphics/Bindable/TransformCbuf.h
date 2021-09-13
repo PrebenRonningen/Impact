@@ -8,7 +8,7 @@ namespace Impact
 	class TransformCbuf : public Bindable
 	{
 	public:
-		TransformCbuf(Graphics& gfx, const TransformComponent& parent)
+		TransformCbuf(Graphics& gfx, TransformComponent& parent)
 			: m_Parent{parent}
 		{
 			if ( !m_pVcbuf )
@@ -33,7 +33,7 @@ namespace Impact
 		static void SetCamera(DirectX::XMFLOAT4X4 c);
 	private:
 		static std::unique_ptr<ConstantBuffer<DirectX::XMFLOAT4X4>> m_pVcbuf;
-		const TransformComponent& m_Parent;
+		TransformComponent& m_Parent;
 		static DirectX::XMFLOAT4X4 m_Camera;
 	};
 

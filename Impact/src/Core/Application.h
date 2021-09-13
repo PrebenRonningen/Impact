@@ -9,6 +9,8 @@ class MouseEvent;
 
 namespace Impact
 {
+	class ImguiLayer;
+
 	class Application
 	{
 	public:
@@ -29,7 +31,7 @@ namespace Impact
 	private:
 		// TODO: not necasserily needed.. mainly used for testing
 		bool OnKeyEvent(Event& e);
-		bool OnMouseMove(Event& e);
+		bool OnMouseEvent(Event& e);
 		
 		
 		void ProcessInput();
@@ -38,7 +40,10 @@ namespace Impact
 	private:
 		Window m_Window;
 		LayerStack m_LayerStack;
-	
+		
+		ImguiLayer* m_pImguiLayer;
+		//std::vector<Entity*> m_Cameras;
+
 		float m_Color;
 		// TODO: move to imputmanager
 		static Keyboard& m_Keyboard;

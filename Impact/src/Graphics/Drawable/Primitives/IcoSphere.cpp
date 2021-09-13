@@ -9,13 +9,13 @@
 #include "GDIManager.h"
 namespace Impact
 {
-	IcoSphere::IcoSphere(Entity* pParent, Graphics& gfx, bool randomized)
+	IcoSphere::IcoSphere(Entity* pParent, Graphics& gfx)
 		: RenderableBase(pParent)
 	{
 		GDIManager gdi{};
 		if (!IsStaticInitialized())
 		{
-			AddStaticBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/uv_grid_2.png")));
+			AddStaticBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/Earth16k.jpg")));
 
 			//AddStaticBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/uv_grid_2.png"), 1));
 
@@ -72,17 +72,9 @@ namespace Impact
 		};
 
 		IndexedTriangleList<Vertex> model;
-		if (randomized)
-		{
-			std::mt19937 rng(std::random_device{}());
-			std::uniform_real_distribution<float> radius(1, 6);
-			std::uniform_int_distribution<int> recursionLevels(0, 4);
-			model = Primitive::IcoSphere::CreateRecLeveled<Vertex>(radius(rng), recursionLevels(rng));
-		}
-		else
-		{
-			model = Primitive::IcoSphere::Create<Vertex>();
-		}
+
+		model = Primitive::IcoSphere::Create<Vertex>();
+
 		AddBind(std::make_unique<VertexBuffer>(gfx, model.m_Vertices));
 
 		AddIndexBuffer(std::make_unique<IndexBuffer>(gfx, model.m_Indices));

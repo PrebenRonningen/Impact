@@ -4,6 +4,8 @@
 #include "Scene\Scene.h"
 #include "Entity\Entity.h"
 #include "Components\RandomMovementComponent.h"
+#include "Components\MovementComponent.h"
+#include "Components\CameraComponent.h"
 //#include "Graphics\Graphics.h"
 
 #include "Graphics\Drawable\Primitives\Cube.h"

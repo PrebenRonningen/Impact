@@ -27,11 +27,11 @@ namespace Impact
 		bool MiddleIsPressed() const noexcept;
 
 
-		std::optional<MouseEvent> Read() noexcept;
+		//std::optional<MouseEvent> Read() noexcept;
 		std::optional<RawDelta> ReadRawDelta() noexcept;
 
-		bool IsBufferEmpty() const noexcept;
-		void ClearBuffer() noexcept;
+		//bool IsBufferEmpty() const noexcept;
+		//void ClearBuffer() noexcept;
 
 		void EnableRaw() noexcept;
 		void DisableRaw() noexcept;

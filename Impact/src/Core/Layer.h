@@ -9,6 +9,7 @@ namespace Impact
 		virtual void OnAttach(Impact::Graphics& gfx) = 0;
 		virtual void OnDetach() noexcept = 0;
 		virtual void Update(float dt) noexcept = 0;
-		virtual void Render(Graphics& gfx) const noexcept = 0;
+		virtual void Render(Graphics& gfx) noexcept = 0;
+		virtual void ImGuiRender(){}; 
 	};
 }

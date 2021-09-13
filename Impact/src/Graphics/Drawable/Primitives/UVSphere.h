@@ -7,7 +7,7 @@ namespace Impact
 	class UVSphere : public RenderableBase<UVSphere>
 	{
 	public:
-		UVSphere(Entity* pParent, Graphics& gfx, bool randomized = false);
+		UVSphere(Entity* pParent, Graphics& gfx);
 		virtual void Update(float dt) noexcept override;
 
 	private:

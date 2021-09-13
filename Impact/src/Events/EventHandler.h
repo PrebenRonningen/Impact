@@ -15,7 +15,7 @@ namespace Impact
 	{
 	public:
 		static void AddKeyEvent(KeyEvent&& event) noexcept;
-		static void AddMouseEvent(const MouseEvent& event) noexcept;
+		static void AddMouseEvent( MouseEvent&& event) noexcept;
 
 		static void RegisterEvent(int layer, const Event::EventType eventType, const std::function<bool(Event&)>& callback) noexcept;
 		static void ProcessEvent() noexcept;

@@ -178,6 +178,9 @@ namespace Impact
 			return true;
 		}
 
+		// this is done to prevent a crash from happening when ImGui Context has not yet been created.
+		const ImGuiIO& imguiIO = (ImGui::GetCurrentContext()) ? ImGui::GetIO() : ImGuiIO{};
+
 		switch ( uMsg )
 		{
 			case WM_CLOSE:
@@ -210,6 +213,8 @@ namespace Impact
 			case WM_SYSKEYDOWN:
 			case WM_KEYDOWN:
 				{
+					if(imguiIO.WantCaptureKeyboard) break;
+
 					if ( !( lParam & 0x40000000 )  || m_Keyboard.IsAutorepeatEnabled()  ) // filter autorepeat
 						m_Keyboard.OnKeyDown(static_cast<uint8_t>( wParam ));
 					break;
@@ -217,11 +222,15 @@ namespace Impact
 			case WM_SYSKEYUP:
 			case WM_KEYUP:
 				{
+					if (imguiIO.WantCaptureKeyboard) break;
+
 					m_Keyboard.OnKeyUp(static_cast<uint8_t>( wParam ));
 					break;
 				}
 			case WM_CHAR:
 				{
+					if (imguiIO.WantCaptureKeyboard) break;
+
 					m_Keyboard.OnChar(static_cast<wchar_t>( wParam ));
 					break;
 				}
@@ -230,42 +239,56 @@ namespace Impact
 		#pragma region Mouse
 			case WM_LBUTTONDOWN:
 				{
+					if (imguiIO.WantCaptureMouse) break;
+
 					const POINTS point = MAKEPOINTS(lParam);
 					m_Mouse.OnLeftPressed(point.x, point.y);
 					break;
 				}
 			case WM_RBUTTONDOWN:
 				{
+					if (imguiIO.WantCaptureMouse) break;
+
 					const POINTS point = MAKEPOINTS(lParam);
 					m_Mouse.OnRightPressed(point.x, point.y);
 					break;
 				}
 			case WM_MBUTTONDOWN:
 				{
+					if (imguiIO.WantCaptureMouse) break;
+
 					const POINTS point = MAKEPOINTS(lParam);
 					m_Mouse.OnMiddlePressed(point.x, point.y);
 					break;
 				}
 			case WM_LBUTTONUP:
 				{
+					if (imguiIO.WantCaptureMouse) break;
+
 					const POINTS point = MAKEPOINTS(lParam);
 					m_Mouse.OnLeftReleased(point.x, point.y);
 					break;
 				}
 			case WM_RBUTTONUP:
 				{
+					if (imguiIO.WantCaptureMouse) break;
+
 					const POINTS point = MAKEPOINTS(lParam);
 					m_Mouse.OnRightReleased(point.x, point.y);
 					break;
 				}
 			case WM_MBUTTONUP:
 				{
+					if (imguiIO.WantCaptureMouse) break;
+
 					const POINTS point = MAKEPOINTS(lParam);
 					m_Mouse.OnMiddleReleased(point.x, point.y); 
 					break;
 				}
 			case WM_MOUSEWHEEL:		// Vertical scroll
 				{
+					if (imguiIO.WantCaptureMouse) break;
+
 					const POINTS point = MAKEPOINTS(lParam);
 					const int delta = GET_WHEEL_DELTA_WPARAM(wParam);
 					m_Mouse.OnWheelDelta(point.x, point.y, 0, delta);
@@ -273,6 +296,8 @@ namespace Impact
 				}
 			case WM_MOUSEHWHEEL:	// Horizontal scroll
 				{
+					if (imguiIO.WantCaptureMouse) break;
+
 					const POINTS point = MAKEPOINTS(lParam);
 					const int delta = GET_WHEEL_DELTA_WPARAM(wParam);
 					m_Mouse.OnWheelDelta(point.x, point.y, delta, 0);
@@ -280,6 +305,8 @@ namespace Impact
 				}
 			case WM_MOUSEMOVE:
 				{
+					if (imguiIO.WantCaptureMouse) break;
+
 					if(!m_Mouse.IsInWindow() )
 						m_Mouse.OnMouseEnter();
 					const POINTS point = MAKEPOINTS(lParam);
@@ -288,6 +315,8 @@ namespace Impact
 				}
 			case WM_MOUSELEAVE:
 				{
+					if (imguiIO.WantCaptureMouse) break;
+
 					m_Mouse.OnMouseLeave();
 					break;
 				}
@@ -295,6 +324,8 @@ namespace Impact
 			// raw input
 			case WM_INPUT:
 				{
+					if (imguiIO.WantCaptureMouse) break;
+
 					UINT dataSize{};
 					if( GetRawInputData(
 						reinterpret_cast<HRAWINPUT>(lParam),

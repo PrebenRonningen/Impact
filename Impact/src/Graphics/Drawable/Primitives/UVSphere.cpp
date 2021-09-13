@@ -5,7 +5,7 @@
 #include <random>
 namespace Impact
 {
-	UVSphere::UVSphere(Entity* pParent, Graphics& gfx, bool randomized)
+	UVSphere::UVSphere(Entity* pParent, Graphics& gfx)
 		: RenderableBase(pParent)
 	{
 		if (!IsStaticInitialized())
@@ -58,18 +58,9 @@ namespace Impact
 		};
 
 		IndexedTriangleList<Vertex> model;
-		if (randomized)
-		{
-			std::mt19937 rng(std::random_device{}());
-			std::uniform_real_distribution<float> radius(1, 6);
-			std::uniform_int_distribution<uint32_t> segmentsLat(8, 64);
-			std::uniform_int_distribution<uint32_t> segmentsLong(8, 64);
-			model = Primitive::UVSphere::CreateSegmented<Vertex>(radius(rng), segmentsLat(rng), segmentsLong(rng));
-		}
-		else
-		{
-			model = Primitive::UVSphere::Create<Vertex>();
-		}
+
+		model = Primitive::UVSphere::Create<Vertex>();
+
 		AddBind(std::make_unique<VertexBuffer>(gfx, model.m_Vertices));
 		AddIndexBuffer(std::make_unique<IndexBuffer>(gfx, model.m_Indices));
 

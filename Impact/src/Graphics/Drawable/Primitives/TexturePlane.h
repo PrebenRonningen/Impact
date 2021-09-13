@@ -7,7 +7,7 @@ namespace Impact
 	class TexturePlane : public RenderableBase<TexturePlane>
 	{
 	public:
-		TexturePlane(Entity* pParent, Graphics& gfx, bool randomized = false);
+		TexturePlane(Entity* pParent, Graphics& gfx);
 		virtual void Update(float dt) noexcept override{dt;};
 
 	private:
