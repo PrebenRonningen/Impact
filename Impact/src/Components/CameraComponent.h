@@ -6,6 +6,8 @@
 #include "Graphics/Bindable/TransformCbuf.h"
 
 #include "Core\QuaternionToEuler.h"
+#include "Events\EventHandler.h"
+#include "Core\Keyboard.h"
 
 namespace Impact
 {
@@ -13,32 +15,33 @@ namespace Impact
 	class CameraComponent : public Component
 	{
 	public:
+
 		CameraComponent(Entity* pParent)
 			: Component(pParent)
 			, m_IsActive{false}
 			, m_Moved{false}
-			, m_LocalUp{false}
 			, m_WorldUp{0,1,0}
 			, m_Up{ GetParent()->GetComponent<TransformComponent>()->UpVector() }
 			, m_Right { GetParent()->GetComponent<TransformComponent>()->RightVector() }
 			, m_Forward{ GetParent()->GetComponent<TransformComponent>()->ForwardVector() }
-			, m_LookAt{ }
 		{
+			EventHandler::RegisterEvent(this, 1, Event::EventType::KeyPressed | Event::EventType::KeyReleased, [this](auto&&... args) -> decltype(auto)
+				{
+					return this->CameraComponent::OnKeyEvent(std::forward<decltype(args)>(args)...);
+				});
 
-			GetParent()->GetComponent<TransformComponent>()->Translation() = { 0, 0, 850 };
-			//Reset();
+			Reset();
 		}
 
+	
 		virtual void Update(float dt) noexcept override
 		{
 			if(!m_IsActive) return;
 
-			const float moveSpeedMultiplyer = (Keyboard::Get().IsKeyDown(VK_SHIFT)) ? 500.f : 0.f;
+			const float moveSpeedMultiplyer = (shift) ? 500.f : 0.f;
 			const float totalMovementSpeed = 1 + moveSpeedMultiplyer * dt;
-			if(Keyboard::Get().IsKeyDown(VK_CONTROL))
-				m_LocalUp = !m_LocalUp;
-			DirectX::XMFLOAT3 modUp = (m_LocalUp) ? m_Up : m_WorldUp;
 
+			DirectX::XMFLOAT3 modUp = (ctrl) ? m_Up : m_WorldUp;
 
 			if (Keyboard::Get().IsKeyDown('W'))
 			{
@@ -86,74 +89,22 @@ namespace Impact
 			{
 				Rotate(m_Up, dt, false);
 			}
-			if (Keyboard::Get().IsKeyDown('O'))
-			{
-				Rotate(m_Forward, dt, true);
-				m_LocalUp=true;
-			}
 			if (Keyboard::Get().IsKeyDown('U'))
 			{
+				Rotate(m_Forward, dt, true);
+			}
+			if (Keyboard::Get().IsKeyDown('O'))
+			{
 				Rotate(m_Forward, dt, false);
-				m_LocalUp = true;
 			}
 
-			DirectX::XMFLOAT4X4 mat = GetParent()->GetComponent<TransformComponent>()->GetInverseTransform();
-			Impact::TransformCbuf::SetCamera(mat);
 			if (!m_Moved) return;
+			if(freeLook)
+				CalculateDirectionVectors(GetParent()->GetComponent<TransformComponent>()->GetWorldTransform());
 
+				Impact::TransformCbuf::SetCamera(GetParent()->GetComponent<TransformComponent>()->GetInverseTransform());
 
-		//	DirectX::XMStoreFloat3(&GetParent()->GetComponent<TransformComponent>()->Translation(), DirectX::XMVector3TransformCoord(DirectX::XMVECTOR(), DirectX::XMLoadFloat4x4(&m_LookAt)));
-		//
-		//	DirectX::XMVECTOR vp;
-		//	DirectX::XMVECTOR vr;
-		//	DirectX::XMVECTOR vs; 
-		//
-		//	//DirectX::XMMatrixDecompose(&vs, &vr, &vp, DirectX::XMLoadFloat4x4(&m_LookAt));
-		//
-		//	DirectX::XMFLOAT4 Qang;
-		//	DirectX::XMStoreFloat4(&Qang, vr);
-		//	DirectX::XMFLOAT3 ang = QuaternionToEuler(Qang);
-		//	ang.x = DirectX::XMConvertToDegrees(ang.x);
-		//	ang.y = DirectX::XMConvertToDegrees(ang.y)+180.f;
-		//	ang.z = DirectX::XMConvertToDegrees(ang.z);
-		//	GetParent()->GetComponent<TransformComponent>()->Rotation() = ang;
-		//
-		//	DirectX::XMFLOAT4X4 mat = GetParent()->GetComponent<TransformComponent>()->GetTransform();
-			//DirectX::XMStoreFloat4x4(&mat, DirectX::XMMatrixInverse(nullptr, DirectX::XMLoadFloat4x4(&mat)));
 			m_Moved = false;
-		}
-
-		void UpdatePosition() noexcept
-		{
-		//	DirectX::XMFLOAT3 pos = GetParent()->GetComponent<TransformComponent>()->Translation();
-		//
-		//	m_LookAt.m[3][0] = pos.x;
-		//	m_LookAt.m[3][1] = pos.y;
-		//	m_LookAt.m[3][2] = pos.z;
-			m_Moved = true;
-		}
-
-		void UpdateRotation()
-		{
-		//DirectX::XMFLOAT3 Drot = GetParent()->GetComponent<TransformComponent>()->Rotation();
-		//DirectX::XMFLOAT3 Rrot = {DirectX::XMConvertToRadians(Drot.x),DirectX::XMConvertToRadians(Drot.y+180.f), DirectX::XMConvertToRadians(Drot.z) };
-		//DirectX::XMVECTOR rot = DirectX::XMLoadFloat3(&Rrot);
-		//
-		//DirectX::XMFLOAT3 f{0,0,1};
-		//DirectX::XMFLOAT3 u{0,1,0};
-		//DirectX::XMFLOAT3 r{-1,0,0};
-		//
-		//DirectX::XMStoreFloat4x4(&m_LookAt, DirectX::XMMatrixMultiply(DirectX::XMLoadFloat4x4(&m_LookAt), DirectX::XMMatrixTranslationFromVector(DirectX::XMVectorScale(DirectX::XMLoadFloat3(&GetParent()->GetComponent<TransformComponent>()->Translation()), -1.f))));
-		//
-		//DirectX::XMStoreFloat4x4(&m_LookAt, DirectX::XMMatrixMultiply(DirectX::XMMatrixIdentity(), DirectX::XMMatrixRotationRollPitchYawFromVector(rot)));
-		//
-		//DirectX::XMStoreFloat3(&m_Forward, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat3(&f), DirectX::XMMatrixRotationRollPitchYawFromVector(rot)));
-		//DirectX::XMStoreFloat3(&m_Up, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat3(&u), DirectX::XMMatrixRotationRollPitchYawFromVector(rot)));
-		//DirectX::XMStoreFloat3(&m_Right, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat3(&r), DirectX::XMMatrixRotationRollPitchYawFromVector(rot)));
-		//
-		//DirectX::XMStoreFloat4x4(&m_LookAt, DirectX::XMMatrixMultiply(DirectX::XMLoadFloat4x4(&m_LookAt), DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&GetParent()->GetComponent<TransformComponent>()->Translation()))));
-
-			m_Moved = true;
 		}
 
 		void Reset()
@@ -166,16 +117,18 @@ namespace Impact
 			GetParent()->GetComponent<TransformComponent>()->UpVector() = {0,1,0};
 			GetParent()->GetComponent<TransformComponent>()->ForwardVector()= {0,0,-1};
 			
-
-			//UpdatePosition();
-			//UpdateRotation();
-		//	Impact::TransformCbuf::SetCamera(m_LookAt);
+			shift = false;
+			ctrl = false;
+			freeLook = false;
+			Impact::TransformCbuf::SetCamera(GetParent()->GetComponent<TransformComponent>()->GetInverseTransform());
 			m_Moved = true;
 		}
 
 		void SetActive()
 		{
 			m_IsActive = true;
+
+			Impact::TransformCbuf::SetCamera(GetParent()->GetComponent<TransformComponent>()->GetInverseTransform());
 		}
 		void SetInactive()
 		{
@@ -184,6 +137,61 @@ namespace Impact
 		bool& GetIsActive()
 		{
 			return m_IsActive;
+		}
+
+		bool OnKeyEvent(Event& e)
+		{
+			auto k = static_cast<KeyEvent&>(e);
+			bool handled = false;
+
+			if(!m_IsActive)
+				return handled;
+
+			switch (k.GetType())
+			{
+			case Event::EventType::KeyPressed:
+				{
+					if (Keyboard::Get().IsKeyDown(VK_SHIFT))
+					{
+						shift = true;
+						handled |= true;
+					}
+					if (Keyboard::Get().IsKeyDown(VK_CONTROL))
+					{
+						// toggle
+						ctrl = !ctrl;
+						handled |= true;
+					}
+					if (Keyboard::Get().IsKeyDown('Z'))
+					{
+						freeLook = false;
+						handled |= true;
+					}
+					break;
+				}
+			case Event::EventType::KeyReleased:
+				{
+					if (Keyboard::Get().IsKeyUp(VK_SHIFT))
+					{
+						shift = false;
+						handled |= true;
+					}
+					//if (Keyboard::Get().IsKeyUp(VK_CONTROL))
+					//{
+					//	m_Modifiers.ctrl = false;
+					//	handled |= true;
+					//}
+					if (Keyboard::Get().IsKeyUp('Z'))
+					{
+						freeLook = true;
+						handled |= true;
+					}
+					break;
+				}
+			default:
+				break;
+			}
+			return handled;
 		}
 
 	private:
@@ -198,52 +206,58 @@ namespace Impact
 		}
 		void Rotate(DirectX::XMFLOAT3 localAxis, float speed, bool alongAxisDirection)
 		{
-		//	DirectX::XMStoreFloat4x4(&m_LookAt, DirectX::XMMatrixMultiply(DirectX::XMLoadFloat4x4(&m_LookAt), DirectX::XMMatrixTranslationFromVector(DirectX::XMVectorScale(DirectX::XMLoadFloat3(&GetParent()->GetComponent<TransformComponent>()->Translation()), -1.f))));
-
-			DirectX::XMMATRIX M;
-
-			M.r[0] = DirectX::XMVectorSet(m_Right.x, m_Right.y, m_Right.z, 0);
-			M.r[1] = DirectX::XMVectorSet(m_Up.x, m_Up.y, m_Up.z, 0);
-			M.r[2] = DirectX::XMVectorSet(m_Forward.x, m_Forward.y, m_Forward.z, 0);
-			M.r[3] = DirectX::g_XMIdentityR3;
-
-
-			//M = DirectX::XMMatrixMultiply(DirectX::XMMatrixRotationAxis(DirectX::XMLoadFloat3(&localAxis), ((alongAxisDirection) ? 1.f : -1.f) * speed), M);
-
-			auto bitch = GetParent()->GetComponent<TransformComponent>()->Rotation();
-			auto rot = DirectX::XMMatrixRotationRollPitchYaw(DirectX::XMConvertToRadians(bitch.x), DirectX::XMConvertToRadians(bitch.y), DirectX::XMConvertToRadians(bitch.z));
+			// Delta Rotation
 			auto eem = DirectX::XMMatrixRotationAxis(DirectX::XMLoadFloat3(&localAxis), ((alongAxisDirection) ? 1.f : -1.f) * speed);
-			M = DirectX::XMMatrixMultiply(M,eem);
-			auto mod = DirectX::XMMatrixMultiply(rot, eem);
-
-
-			DirectX::XMStoreFloat3(&m_Right, M.r[0]);
-			DirectX::XMStoreFloat3(&m_Up, M.r[1]);
-			DirectX::XMStoreFloat3(&m_Forward, M.r[2]);
+			// modified Rotation Matrix
+			auto mod = DirectX::XMMatrixMultiply(DirectX::XMLoadFloat4x4(&GetParent()->GetComponent<TransformComponent>()->GetWorldTransform()), eem);
+		
+			if (freeLook)
+			{
+				DirectX::XMFLOAT4X4 rotationMatrix;
+				DirectX::XMStoreFloat4x4(&rotationMatrix, mod);
+				CalculateDirectionVectors(rotationMatrix);
+			}
 
 			DirectX::XMFLOAT4 qRotation;
 			DirectX::XMStoreFloat4(&qRotation, DirectX::XMQuaternionRotationMatrix(mod));
-			auto newRotaion = QuaternionToEulerDeg(qRotation);
-			GetParent()->GetComponent<TransformComponent>()->Rotation() = { newRotaion.x, newRotaion.y, newRotaion.z };
 
-
-
-			//DirectX::XMStoreFloat3(&m_Forward, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat3(&m_Forward), DirectX::XMMatrixRotationAxis(DirectX::XMLoadFloat3(&localAxis), ((alongAxisDirection) ? 1.f : -1.f) * speed)));
-			//DirectX::XMStoreFloat3(&m_Up, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat3(&m_Up), DirectX::XMMatrixRotationAxis(DirectX::XMLoadFloat3(&localAxis), speed))); // don't remember why this one is like this
-			//DirectX::XMStoreFloat3(&m_Right, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat3(&m_Right), DirectX::XMMatrixRotationAxis(DirectX::XMLoadFloat3(&localAxis), ((alongAxisDirection) ? 1.f : -1.f) * speed)));
+			GetParent()->GetComponent<TransformComponent>()->Rotation() = QuaternionToEulerDeg(qRotation);
 
 			m_Moved |= true;
 		}
+
+		// for resetting FreeLook
+		void CalculateDirectionVectors(const DirectX::XMFLOAT4X4& rotationMatrix)
+		{
+			DirectX::XMMATRIX M;
+
+			M.r[0] = DirectX::g_XMNegIdentityR0;
+			M.r[1] = DirectX::g_XMIdentityR1;
+			M.r[2] = DirectX::g_XMNegIdentityR2;
+			M.r[3] = DirectX::g_XMIdentityR3;
+
+			// rotate Direction Vectors
+			M = DirectX::XMMatrixMultiply(M, DirectX::XMLoadFloat4x4(&rotationMatrix));
+
+			// store modified Direction Vectors
+			DirectX::XMStoreFloat3(&m_Right, M.r[0]);
+			DirectX::XMStoreFloat3(&m_Up, M.r[1]);
+			DirectX::XMStoreFloat3(&m_Forward, M.r[2]);
+		}
+
 	private:
+		bool shift;
+		bool ctrl;
+		bool freeLook;
+
 		bool m_IsActive;
 		bool m_Moved;
-		bool m_LocalUp;
+
 		DirectX::XMFLOAT3 m_WorldUp;
 		
 		DirectX::XMFLOAT3& m_Up;
 		DirectX::XMFLOAT3& m_Right;
 		DirectX::XMFLOAT3& m_Forward;
 
-		DirectX::XMFLOAT4X4 m_LookAt;
 	};
 }

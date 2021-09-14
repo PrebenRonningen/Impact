@@ -7,6 +7,7 @@ namespace Impact
 {
 	std::deque<KeyEvent> EventHandler::m_KeyBuffer{};
 	std::array<MouseEvent, EventHandler::m_BufferSize> EventHandler::m_MouseBuffer{};
+	std::vector<uint64_t> EventHandler::m_funcSources{};
 	
 	uint8_t m_MouseIndex{0};
 	std::map<int, std::vector<std::pair<uint16_t, std::function<bool(Event&)>>>> EventHandler::m_LayerCallback{};
@@ -23,8 +24,13 @@ namespace Impact
 			m_MouseBuffer[(m_MouseIndex < m_BufferSize) ? m_MouseIndex++ : m_BufferSize-1] = std::move(event);
 	}
 
-	void EventHandler::RegisterEvent(int layer, const Event::EventType eventType, const std::function<bool(Event&)>& callback) noexcept
+	void EventHandler::RegisterEvent(void* ovner, int layer, const Event::EventType eventType, const std::function<bool(Event&)>& callback) noexcept
 	{
+		bool exist = false;
+		auto source = std::find(m_funcSources.begin(), m_funcSources.end(), (uint64_t)ovner);
+		if(source != m_funcSources.end())
+			exist = true;
+
 	//	m_MouseBuffer.resize(m_BufferSize);
 		auto it = m_LayerCallback.find(layer);
 		if ( it != m_LayerCallback.end() )
@@ -32,7 +38,7 @@ namespace Impact
 			auto eventPair = std::find_if(it->second.begin(), it->second.end(), 
 							[&callback](std::pair<uint16_t, std::function<bool(Event&)>>& pair)
 							{
-								bool k = (uint32_t&) callback ^ (uint32_t&) pair.second;
+								bool k = (uint64_t&) callback ^ (uint64_t&) pair.second;
 								return !k;
 							});
 
@@ -40,7 +46,8 @@ namespace Impact
 			{
 				eventPair->first |= static_cast<uint16_t>( eventType );
 				m_RegisteredEventTypes |= static_cast<uint16_t>(eventType);
-				return;
+				if(exist)
+					return;
 			}
 
 		//m_LayerCallback[layer].push_back(std::make_pair(eventType, callback));
@@ -49,6 +56,9 @@ namespace Impact
 
 		m_LayerCallback[layer].push_back(std::make_pair(static_cast<uint16_t>(eventType), callback));
 		m_RegisteredEventTypes |= static_cast<uint16_t>( eventType );
+
+		if(!exist)
+			m_funcSources.push_back((uint64_t)ovner);
 
 	}
 
@@ -76,7 +86,7 @@ namespace Impact
 		if ( !( eT & m_RegisteredEventTypes ) )
 			return;
 
-		for ( auto it = m_LayerCallback.rbegin(); it != m_LayerCallback.rend(); ++it )
+		for ( auto it = m_LayerCallback.begin(); it != m_LayerCallback.end(); ++it )
 		{
 			for ( const auto& eventPair : it->second )
 			{
@@ -86,7 +96,7 @@ namespace Impact
 					if( event->m_Handled ) break;
 				}
 			}
-
+			if (event->m_Handled) break;
 			//for( pair<(eventTypeMask)bitset<16>, Function> layerEvents : pLayer )
 			//{
 			//	if(layerEvents.first & event.type())

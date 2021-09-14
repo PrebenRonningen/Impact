@@ -17,13 +17,12 @@ namespace Impact
 			, m_WorldScale { 1.0f, 1.0f, 1.0f }
 			, m_LocalTransform{}
 			, m_WorldTransform{}
+			, m_Base{}
 			, m_RightVector{ -1.f, 0.f, 0.f }
 			, m_UpVector{ 0.f, 1.f, 0.f }
 			, m_ForwardVector { 0.f, 0.f, -1.f }
 		{
-		
 			DirectX::XMStoreFloat4x4(&m_Base, DirectX::XMMatrixLookAtLH(DirectX::XMLoadFloat3(&m_LocalTranslation), DirectX::XMLoadFloat3(&m_ForwardVector), DirectX::XMLoadFloat3(&m_UpVector)));
-
 		}
 
 		DirectX::XMFLOAT3& LocalTranslation() noexcept

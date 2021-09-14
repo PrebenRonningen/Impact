@@ -32,7 +32,7 @@ namespace Impact
 		, m_pImguiLayer{nullptr}
 	{
 		// make easier and more readable
-		EventHandler::RegisterEvent(0, Event::EventType::KeyPressed | Event::EventType::KeyReleased, [this](auto&&... args) -> decltype( auto )
+		EventHandler::RegisterEvent(this, 0, Event::EventType::KeyPressed | Event::EventType::KeyReleased, [this](auto&&... args) -> decltype( auto )
 									{
 										return this->Application::OnKeyEvent(std::forward<decltype( args )>(args)...);
 									});
@@ -43,9 +43,9 @@ namespace Impact
 		{
 			return this->Application::OnMouseEvent(std::forward<decltype( args )>(args)...);
 		};
-		EventHandler::RegisterEvent(0, Event::EventType::Move, onMove);
-		EventHandler::RegisterEvent(0, Event::EventType::LPressed, onMove);
-		EventHandler::RegisterEvent(0, Event::EventType::LPressed | Event::EventType::LReleased, onMove);
+		EventHandler::RegisterEvent(this, 0, Event::EventType::Move, onMove);
+		EventHandler::RegisterEvent(this, 0, Event::EventType::LPressed, onMove);
+		EventHandler::RegisterEvent(this, 0, Event::EventType::LPressed | Event::EventType::LReleased, onMove);
 
 		PushOverlay(m_pImguiLayer = new ImguiLayer());
 		
@@ -128,33 +128,43 @@ namespace Impact
 	bool Application::OnKeyEvent(Event& e)
 	{
 		auto k = static_cast<KeyEvent&>(e);
-
+		bool handled = false;
 		switch ( k.GetType() )
 		{
 			case Event::EventType::KeyPressed:
 				{
-					if(m_Keyboard.IsKeyDown('V'))
+					if (m_Keyboard.IsKeyDown('V'))
+					{
 						m_Window.GetGraphix().VSynchOnOff();
+						handled |= true;
+					}
 
-					if(m_Keyboard.IsKeyDown(VK_SPACE))
+					if (m_Keyboard.IsKeyDown(VK_SPACE))
+					{
 						m_Paused = !m_Paused;
+						handled |= true;
+					}
 
 					if (m_Keyboard.IsKeyDown(VK_TAB))
 					{
 						(m_pImguiLayer->IsEnabled()) ? m_pImguiLayer->Dissable() : m_pImguiLayer->Enable();
+						handled |= true;
 					}
 
 					if (m_Keyboard.IsKeyDown('1'))
 					{
 						m_Window.GetGraphix().SetState(0);
+						handled |= true;
 					}
 					if (m_Keyboard.IsKeyDown('2'))
 					{
 						m_Window.GetGraphix().SetState(1);
+						handled |= true;
 					}
 					if (m_Keyboard.IsKeyDown('3'))
 					{
 						m_Window.GetGraphix().SetState(2);
+						handled |= true;
 					}
 				break;
 				}
@@ -163,7 +173,7 @@ namespace Impact
 				break;
 		}
 
-		return false;
+		return handled;
 	}
 	
 	bool Application::OnMouseEvent(Event& e)

@@ -7,25 +7,50 @@ TestLayer::TestLayer() : m_Entities{}
 
 }
 
+std::vector<Impact::Entity*> m_Cameras;
+int currentCameraIdx = 0;
+
 void TestLayer::OnAttach(Impact::Graphics& gfx)
 {
 
 	m_Scene = std::make_unique<Impact::Scene>();
 
+	// planet
 	Impact::Entity* entity = m_Scene->CreateEntity();
-	//entity->AddComponent<Impact::RandomMovementComponent>();
 	m_Draw.push_back(entity->AddComponent<Impact::IcoSphere>(gfx));
-
 	icoTransform = entity->GetComponent<Impact::TransformComponent>();
-
 	m_Entities.push_back(entity);
 
+
+	// camera 1
 	entity = m_Scene->CreateEntity();
-//	entity->AddComponent<Impact::MovementComponent>();
-	//entity->AddComponent<Impact::CameraComponent>();
-	entity->AddComponent<Impact::CameraComponent>()->SetActive();
+	m_Draw.push_back(entity->AddComponent<Impact::Cube>(gfx));
+	entity->AddComponent<Impact::CameraComponent>();
+//	entity->AddComponent<Impact::CameraComponent>()->SetActive();
 	m_Entities.push_back(entity);
+	m_Cameras.push_back(entity);
 	m_pCamera = entity;
+
+	// camera 2
+	entity = m_Scene->CreateEntity();
+	m_Draw.push_back(entity->AddComponent<Impact::Cube>(gfx));
+	entity->AddComponent<Impact::CameraComponent>();
+	m_Entities.push_back(entity);
+	m_Cameras.push_back(entity);
+
+	// camera 3
+	entity = m_Scene->CreateEntity();
+	m_Draw.push_back(entity->AddComponent<Impact::Cube>(gfx));
+	entity->AddComponent<Impact::CameraComponent>();
+	m_Entities.push_back(entity);
+	m_Cameras.push_back(entity);
+
+	// camera 4
+	entity = m_Scene->CreateEntity();
+	entity->AddComponent<Impact::CameraComponent>();
+	m_Draw.push_back(entity->AddComponent<Impact::Cube>(gfx));
+	m_Entities.push_back(entity);
+	m_Cameras.push_back(entity);
 
 }
 
@@ -77,7 +102,7 @@ void TestLayer::ImGuiRender() noexcept
 
 	if (ImGui::Begin("Camera"))
 	{
-		static bool& cameraIsActive = m_pCamera->GetComponent<Impact::CameraComponent>()->GetIsActive();
+		bool& cameraIsActive = m_pCamera->GetComponent<Impact::CameraComponent>()->GetIsActive();
 		if (ImGui::Checkbox("ActiveCamera", &cameraIsActive))
 		{
 			if(cameraIsActive)
@@ -98,6 +123,19 @@ void TestLayer::ImGuiRender() noexcept
 		if (ImGui::Button("Reset"))
 		{
 			m_pCamera->GetComponent<Impact::CameraComponent>()->Reset();
+		}
+	}
+	ImGui::End();
+
+	if(ImGui::Begin("Cameras"))
+	{
+		if (ImGui::Button("NextCamera")) {
+			m_pCamera->GetComponent<Impact::CameraComponent>()->SetInactive();
+			currentCameraIdx++;
+			currentCameraIdx = currentCameraIdx % (m_Cameras.size());
+			m_pCamera = m_Cameras[currentCameraIdx];
+			m_pCamera->GetComponent<Impact::CameraComponent>()->SetActive();
+
 		}
 	}
 	ImGui::End();

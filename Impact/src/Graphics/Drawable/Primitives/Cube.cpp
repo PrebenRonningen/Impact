@@ -15,7 +15,7 @@ namespace Impact
 				DirectX::XMFLOAT3 pos;
 			};
 
-			IndexedTriangleList<Vertex> model = Primitive::Cube::Create<Vertex>();
+			IndexedTriangleList<Vertex> model = Primitive::Cube::Create<Vertex>(10.f);
 
 			AddStaticBind(std::make_unique<VertexBuffer>(gfx, model.m_Vertices));
 

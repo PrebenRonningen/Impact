@@ -12,9 +12,8 @@ namespace Impact
 		{
 		public:
 			template <typename V>
-			static IndexedTriangleList<V> Create()
+			static IndexedTriangleList<V> Create(const float size = 0.5f)
 			{
-				const float size = 0.5f; // half of width, height, depth
 				const std::vector<DirectX::XMFLOAT3> vPos =
 				{
 					{DirectX::XMFLOAT3(-size, -size, -size)},
