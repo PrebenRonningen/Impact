@@ -103,10 +103,12 @@ namespace Impact
 
 	void Application::Render()
 	{
-		m_Color = sin(std::chrono::duration<float>(std::chrono::steady_clock::now().time_since_epoch()).count()) / 2.f + 0.5f;
-		DirectX::XMFLOAT4 col{ m_Color,m_Color,m_Color,m_Color };
-		DirectX::XMStoreFloat4(&col, DirectX::XMVectorMultiply(DirectX::XMLoadFloat4(&col), DirectX::Colors::CornflowerBlue));
+		//m_Color = sin(std::chrono::duration<float>(std::chrono::steady_clock::now().time_since_epoch()).count()) / 2.f + 0.5f;
+		//DirectX::XMFLOAT4 col{ m_Color,m_Color,m_Color,m_Color };
+		//DirectX::XMStoreFloat4(&col, DirectX::XMVectorMultiply(DirectX::XMLoadFloat4(&col), DirectX::Colors::CornflowerBlue));
 
+		DirectX::XMFLOAT4 col = { 0.5f, 0.f, 0.5f, 1.f, };
+		DirectX::XMStoreFloat4(&col, DirectX::XMVectorMultiply(DirectX::XMLoadFloat4(&col), DirectX::Colors::CornflowerBlue));
 		m_Window.GetGraphix().ClearBuffer( col );
 
 		for ( Layer* layer : m_LayerStack )
@@ -127,7 +129,7 @@ namespace Impact
 	
 	bool Application::OnKeyEvent(Event& e)
 	{
-		auto k = static_cast<KeyEvent&>(e);
+		const auto& k = static_cast<KeyEvent&>(e);
 		bool handled = false;
 		switch ( k.GetType() )
 		{

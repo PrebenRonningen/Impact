@@ -1,30 +1,24 @@
 
 cbuffer CBuffer
 {
-	matrix transform;
+	matrix gWorld;
+	matrix gWorldViewProj;
 };
 
 struct VSInput
 {
-	float3 pos		: POSITION;
-//	float4 color	: Color;
+	float3 Position	: POSITION;
 };
 
-//struct VSOutput
-//{
-//	float4 pos		: SV_POSITION;
-//	float4 color	: Color;
-//};
-
-//VSOutput main(VSInput input)
-//{
-//	VSOutput output;
-//	output.pos = mul( float4( input.pos.xyz, 1.0f ), transform );
-//	output.color = input.color;
-//	return output;
-//}
-
-float4 main(float3 pos : Position) : SV_Position
+struct VSOutput
 {
-	return mul( float4( pos, 1.0f ), transform );
+	float4 pos : SV_POSITION;
+};
+
+
+VSOutput main(VSInput input)
+{
+	VSOutput output = ( VSOutput )0;
+	output.pos = mul( float4( input.Position, 1.0f ), gWorldViewProj );
+	return output;
 }

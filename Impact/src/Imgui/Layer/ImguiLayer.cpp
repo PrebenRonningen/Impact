@@ -42,9 +42,8 @@ namespace Impact
 		if (!m_Enabled) return;
 		if (ImGui::Begin("Simulation Speed"))
 		{
-			ImGui::SliderFloat("Speed Factor", &m_SpeedFactor, 0.0f, 5.0f);
+			ImGui::DragFloat("Speed Factor", &m_SpeedFactor, 0.01f, -5.0f, 5.0f, "%.3f");
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-			ImGui::InputText("Button", buffer, sizeof(buffer));
 		}
 		ImGui::End();
 	}

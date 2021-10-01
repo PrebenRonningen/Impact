@@ -5,7 +5,7 @@
 
 namespace Impact
 {
-	Cube::Cube(Entity* pParent, Graphics& gfx)
+	Cube::Cube(Entity* pParent, Graphics& gfx, const float size)
 		: RenderableBase(pParent)
 	{
 		if (!IsStaticInitialized())
@@ -15,7 +15,7 @@ namespace Impact
 				DirectX::XMFLOAT3 pos;
 			};
 
-			IndexedTriangleList<Vertex> model = Primitive::Cube::Create<Vertex>(10.f);
+			IndexedTriangleList<Vertex> model = Primitive::Cube::Create<Vertex>(size/2.f);
 
 			AddStaticBind(std::make_unique<VertexBuffer>(gfx, model.m_Vertices));
 

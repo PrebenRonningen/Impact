@@ -3,7 +3,7 @@
 #include "Debug/WindowsMessageMap.h"
 #endif // _DEBUG
 #include <sstream>
-#include "../Resources/resource.h"
+#include "../SandBox/resource.h"
 
 #include "Core/Exceptions/WindowThrow.h"
 #include "Core/Keyboard.h"
@@ -187,8 +187,8 @@ namespace Impact
 				{
 					if(!GetParent(m_hWnd) )
 					{
-						PostQuitMessage(69);
-						return 0; // RAII
+						PostQuitMessage(0x45);
+						return 0; 
 					}
 					else
 					{
@@ -390,8 +390,8 @@ namespace Impact
 		wc.lpfnWndProc = HandleMessageStartUp;
 		wc.hInstance = GetInstance();
 		wc.lpszClassName = GetName();
-		wc.hIcon = static_cast<HICON>(LoadImage(m_hInstance, MAKEINTRESOURCE(IDI_APPICON), IMAGE_ICON, 48, 48, LR_DEFAULTCOLOR));
-		wc.hIconSm = static_cast<HICON>( LoadImage(m_hInstance, MAKEINTRESOURCE(IDI_APPICON), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR) );
+		wc.hIcon = static_cast<HICON>(LoadImage(m_hInstance, MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 48, 48, LR_DEFAULTCOLOR));
+		wc.hIconSm = static_cast<HICON>( LoadImage(m_hInstance, MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR) );
 		wc.cbClsExtra = 0;
 		wc.cbWndExtra = 0;
 		wc.hbrBackground = nullptr;

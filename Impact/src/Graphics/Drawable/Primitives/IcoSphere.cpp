@@ -9,15 +9,16 @@
 #include "GDIManager.h"
 namespace Impact
 {
+
+		static int k = 0;
 	IcoSphere::IcoSphere(Entity* pParent, Graphics& gfx)
 		: RenderableBase(pParent)
+		, m_Model{}
 	{
+		m_Gfx = &gfx;
 		GDIManager gdi{};
 		if (!IsStaticInitialized())
 		{
-			AddStaticBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/Earth16k.jpg")));
-
-			//AddStaticBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/uv_grid_2.png")));
 
 			std::unique_ptr<VertexShader> pVS = std::make_unique<VertexShader>(gfx, "TextureVS.cso");
 			ID3DBlob* pVSbc = pVS->GetByteCode();
@@ -28,56 +29,59 @@ namespace Impact
 
 			AddStaticBind(std::make_unique<SamplerState>(gfx));
 
+			//struct colorConstBuffer
+			//{
+			//	struct
+			//	{
+			//		float r;
+			//		float g;
+			//		float b;
+			//		float a;
+			//	}face_colors[8];
+			//};
 
-			struct colorConstBuffer
-			{
-				struct
-				{
-					float r;
-					float g;
-					float b;
-					float a;
-				}face_colors[8];
-			};
-
-			const colorConstBuffer constBuffer =
-			{
-				{
-					{1.0f, 0.0f, 0.0f, 1.0f},
-					{0.0f, 1.0f, 0.0f, 1.0f},
-					{0.0f, 0.0f, 1.0f, 1.0f},
-					{0.0f, 1.0f, 1.0f, 1.0f},
-					{1.0f, 0.0f, 1.0f, 1.0f},
-					{1.0f, 1.0f, 0.0f, 1.0f},
-					{1.0f, 1.0f, 1.0f, 1.0f},
-					{0.0f, 0.0f, 0.0f, 1.0f},
-				}
-			};
-			AddStaticBind(std::make_unique<ConstantBuffer<colorConstBuffer>>(gfx, constBuffer, PipelineStage::PixelShader));
+			//const colorConstBuffer constBuffer =
+			//{
+			//	{
+			//		{1.0f, 0.0f, 0.0f, 1.0f},
+			//		{0.0f, 1.0f, 0.0f, 1.0f},
+			//		{0.0f, 0.0f, 1.0f, 1.0f},
+			//		{0.0f, 1.0f, 1.0f, 1.0f},
+			//		{1.0f, 0.0f, 1.0f, 1.0f},
+			//		{1.0f, 1.0f, 0.0f, 1.0f},
+			//		{1.0f, 1.0f, 1.0f, 1.0f},
+			//		{0.0f, 0.0f, 0.0f, 1.0f},
+			//	}
+			//};
+			//AddStaticBind(std::make_unique<ConstantBuffer<colorConstBuffer>>(gfx, constBuffer, PipelineStage::PixelShader));
 
 			const std::vector<D3D11_INPUT_ELEMENT_DESC> inputElements =
 			{
 				{"Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{"TexCoord", 0,  DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0}
+				{"Normal", 0,  DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+				{"TexCoord", 0,  DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0}
 			};
 
 			AddStaticBind(std::make_unique<InputLayout>(gfx, inputElements, pVSbc));
 			AddStaticBind(std::make_unique<Topology>(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 		}
+			AddBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/uv_grid_2.png")));
+		//	static int tex = 0;
+		//	if (tex < 1)
+		//{
+		//	tex++;
+		// AddBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/Earth8k.jpg")));
+		//}
+		//else
+		//{
+		//	AddBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/moon8k.jpg")));
+		//}
 
-		struct Vertex
-		{
-			DirectX::XMFLOAT3 pos;
-			DirectX::XMFLOAT2 texCoord;
-		};
+		m_Model = Primitive::IcoSphere::Create<Vertex>();
 
-		IndexedTriangleList<Vertex> model;
+		AddBind(std::make_unique<VertexBuffer>(gfx, m_Model.m_Vertices));
 
-		model = Primitive::IcoSphere::Create<Vertex>();
-
-		AddBind(std::make_unique<VertexBuffer>(gfx, model.m_Vertices));
-
-		AddIndexBuffer(std::make_unique<IndexBuffer>(gfx, model.m_Indices));
+		AddIndexBuffer(std::make_unique<IndexBuffer>(gfx, m_Model.m_Indices));
 
 		AddBind(std::make_unique<TransformCbuf>(gfx, *pParent->GetComponent<TransformComponent>()));
 	}
@@ -85,5 +89,19 @@ namespace Impact
 	void IcoSphere::Update(float dt) noexcept
 	{
 		dt;
+	}
+
+	void IcoSphere::UpdateModel(int recursionLevel)
+	{
+		RemoveBind<VertexBuffer>();
+		RemoveBind<IndexBuffer>();
+		//RemoveBind(std::make_unique<IndexBuffer>(*m_Gfx, m_Model.m_Indices));
+
+
+		m_Model = Primitive::IcoSphere::Create<Vertex>(recursionLevel);
+		
+		AddBind(std::make_unique<VertexBuffer>(*m_Gfx, m_Model.m_Vertices));
+
+		AddIndexBuffer(std::make_unique<IndexBuffer>(*m_Gfx, m_Model.m_Indices));
 	}
 }

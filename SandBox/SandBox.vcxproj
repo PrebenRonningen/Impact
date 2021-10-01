@@ -215,7 +215,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
     <ClInclude Include="TestLayer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SandBox.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Impact\Resources\PlanetIcon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

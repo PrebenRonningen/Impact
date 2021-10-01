@@ -55,7 +55,7 @@ namespace Impact
 
 	Surface Surface::CreateFromFile(const std::string& name)
 	{
-		uint32_t width, height = 0;
+		UINT width, height = 0;
 		std::unique_ptr<ColorARGB[]> pColorBuffer{};
 
 		wchar_t wName[512];
@@ -71,7 +71,8 @@ namespace Impact
 
 		width = bitmap.GetWidth();
 		height = bitmap.GetHeight();
-		pColorBuffer = std::make_unique<ColorARGB[]>(width * height);
+		UINT buffSize = width * height;
+		pColorBuffer = std::make_unique<ColorARGB[]>(buffSize);
 
 		for (uint32_t y = 0; y < height; ++y)
 		{

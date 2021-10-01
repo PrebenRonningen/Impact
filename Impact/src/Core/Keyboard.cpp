@@ -24,11 +24,31 @@ namespace Impact
 		return s_KeyboardData.m_KeyStates[keyCode];
 	}
 
+	bool Keyboard::IsAnyKeyDown(uint8_t* keyCode, uint8_t numberOfKeys) const noexcept
+	{
+		bool isAnyDown = false;
+		for (uint8_t i{}; i < numberOfKeys; i++)
+		{
+			isAnyDown |= s_KeyboardData.m_KeyStates[*keyCode++];
+
+		}
+		return isAnyDown;
+	}
+
 	bool Keyboard::IsKeyUp(uint8_t keyCode) const noexcept
 	{
 		return !s_KeyboardData.m_KeyStates[keyCode];
 	}
+	bool Keyboard::IsAnyKeyUp(uint8_t* keyCode, uint8_t numberOfKeys) const noexcept
+	{
+		bool isAnyUp = false;
+		for (uint8_t i{}; i < numberOfKeys; i++)
+		{
+			isAnyUp |= !s_KeyboardData.m_KeyStates[*keyCode++];
 
+		}
+		return isAnyUp;
+	}
 	std::optional<KeyEvent> Keyboard::ReadKey() noexcept
 	{
 		if ( s_KeyboardData.m_KeyBuffer.empty() )

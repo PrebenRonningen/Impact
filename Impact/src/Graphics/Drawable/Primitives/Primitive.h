@@ -341,7 +341,7 @@ namespace Impact
 
 					4,9,5,
 					2,4,11,
-					6,2,10,	// <- this one is ating weird
+					6,2,10,	// <- this one is acting weird
 					8,6,7,
 					9,8,1
 				};
@@ -470,15 +470,20 @@ namespace Impact
 					}
 				}
 
+				for (auto& v : vertices) 
+				{
+					DirectX::XMStoreFloat3(&v.normal, DirectX::XMLoadFloat3(&v.pos));
+				}
+
 				return { std::move(vertices), std::move(indices) };
 			};
 			
 
 
 			template <typename V>
-			static IndexedTriangleList<V> Create()
+			static IndexedTriangleList<V> Create(int rec = 6)
 			{
-				return CreateRecLeveled<V>(637.11f, 6);
+				return CreateRecLeveled<V>(63.711f, rec);
 			}
 			private:
 				static DirectX::XMFLOAT3 GetMiddlePoint(DirectX::XMFLOAT3 p1, DirectX::XMFLOAT3 p2)

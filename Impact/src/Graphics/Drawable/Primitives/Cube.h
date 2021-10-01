@@ -7,7 +7,9 @@ namespace Impact
 	class Cube : public RenderableBase<Cube>
 	{
 	public:
-		Cube(Entity* pParent, Graphics& gfx);
+		Cube(Entity* pParent, Graphics& gfx, const float size = 1.f);
+
+
 		virtual void Update(float dt) noexcept override;
 
 	private:

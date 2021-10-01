@@ -3,6 +3,7 @@
 #include "Components/Component.h"
 #include <DirectXMath.h>
 #include <memory>
+
 namespace Impact
 {
 	class IndexBuffer;
@@ -22,6 +23,19 @@ namespace Impact
 
 	protected:
 		void AddBind(std::unique_ptr<Bindable> pBind) noexcept;	//remove the need for Uniquie pointers
+
+		template <typename T>
+		void RemoveBind() noexcept
+		{
+			const type_info& ti = typeid(T);
+
+			for (size_t i{}; i < m_Binds.size(); i++) 
+			{
+				if (m_Binds[i] && typeid(*m_Binds[i]) == ti)
+					m_Binds.erase(std::find(m_Binds.begin(), m_Binds.end(), m_Binds[i]));
+			}
+		};
+
 		void AddIndexBuffer(std::unique_ptr<IndexBuffer> pIdxBuffer) noexcept; //remove the need for Uniquie pointers
 
 	private:

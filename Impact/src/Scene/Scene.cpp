@@ -1,6 +1,6 @@
 #include "Scene.h"
-#include "Entity\Entity.h"
 #include "Components\TransformComponent.h"
+#include "Entity\Entity.h"
 
 namespace Impact {
 	Scene::~Scene()

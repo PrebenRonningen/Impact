@@ -20,8 +20,10 @@ namespace Impact
 	
 		// key
 		bool IsKeyDown(uint8_t keyCode) const noexcept;
+		bool IsAnyKeyDown(uint8_t* keyCode, uint8_t numberOfKeys) const noexcept;
 		bool IsKeyUp(uint8_t keyCode) const noexcept;
-		//bool IsKeyRepeat(uint8_t keyCode) const noexcept;
+		bool IsAnyKeyUp(uint8_t* keyCode, uint8_t numberOfKeys) const noexcept;
+
 		std::optional<KeyEvent> ReadKey() noexcept;
 		bool IsKeyBufferEmpty() const noexcept;
 		void ClearKeyBuffer() noexcept;

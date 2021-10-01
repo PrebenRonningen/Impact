@@ -18,7 +18,7 @@ namespace Gdiplus
 #pragma warning( pop )
 
 //#include <sstream>
-//#pragma comment(lib, "gdiplus.lib")
+#pragma comment(lib, "gdiplus.lib")
 
 namespace Impact
 {

@@ -10,7 +10,8 @@ namespace Impact
 		{
 			b->Bind(gfx);
 		}
-		for (auto& b : GetStaticBinds()) {
+		for (auto& b : GetStaticBinds())
+		{
 			b->Bind(gfx);
 		}
 		gfx.DrawIndexed(m_pIndexBuffer->GetCount());

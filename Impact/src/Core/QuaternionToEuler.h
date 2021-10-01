@@ -1,6 +1,6 @@
 #pragma once
 #include <DirectXMath.h>
-enum RotSeq { zyx, zyz, zxy, zxz, yxz, yxy, yzx, yzy, xyz, xyx, xzy, xzx };
+enum class RotSeq { zyx, zyz, zxy, zxz, yxz, yxy, yzx, yzy, xyz, xyx, xzy, xzx };
 
 struct Double3 {
 	double x, y, z;
@@ -24,7 +24,7 @@ static DirectX::XMFLOAT3 QuaternionToEulerRad(DirectX::XMFLOAT4 q, RotSeq rotSeq
 	Double3 res{};
 
 	switch (rotSeq) {
-	case zyx:
+	case RotSeq::zyx:
 		threeaxisrot(2 * (q.x * q.y + q.w * q.z),
 			q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z,
 			-2 * (q.x * q.z - q.w * q.y),
@@ -33,7 +33,7 @@ static DirectX::XMFLOAT3 QuaternionToEulerRad(DirectX::XMFLOAT4 q, RotSeq rotSeq
 			res);
 		break;
 
-	case zyz:
+	case RotSeq::zyz:
 		twoaxisrot(2 * (q.y * q.z - q.w * q.x),
 			2 * (q.x * q.z + q.w * q.y),
 			q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z,
@@ -42,7 +42,7 @@ static DirectX::XMFLOAT3 QuaternionToEulerRad(DirectX::XMFLOAT4 q, RotSeq rotSeq
 			res);
 		break;
 
-	case zxy:
+	case RotSeq::zxy:
 		threeaxisrot(-2 * (q.x * q.y - q.w * q.z),
 			q.w * q.w - q.x * q.x + q.y * q.y - q.z * q.z,
 			2 * (q.y * q.z + q.w * q.x),
@@ -51,7 +51,7 @@ static DirectX::XMFLOAT3 QuaternionToEulerRad(DirectX::XMFLOAT4 q, RotSeq rotSeq
 			res);
 		break;
 
-	case zxz:
+	case RotSeq::zxz:
 		twoaxisrot(2 * (q.x * q.z + q.w * q.y),
 			-2 * (q.y * q.z - q.w * q.x),
 			q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z,
@@ -60,7 +60,7 @@ static DirectX::XMFLOAT3 QuaternionToEulerRad(DirectX::XMFLOAT4 q, RotSeq rotSeq
 			res);
 		break;
 
-	case yxz:
+	case RotSeq::yxz:
 		threeaxisrot(2 * (q.x * q.z + q.w * q.y),
 			q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z,
 			-2 * (q.y * q.z - q.w * q.x),
@@ -69,7 +69,7 @@ static DirectX::XMFLOAT3 QuaternionToEulerRad(DirectX::XMFLOAT4 q, RotSeq rotSeq
 			res);
 		break;
 
-	case yxy:
+	case RotSeq::yxy:
 		twoaxisrot(2 * (q.x * q.y - q.w * q.z),
 			2 * (q.y * q.z + q.w * q.x),
 			q.w * q.w - q.x * q.x + q.y * q.y - q.z * q.z,
@@ -78,7 +78,7 @@ static DirectX::XMFLOAT3 QuaternionToEulerRad(DirectX::XMFLOAT4 q, RotSeq rotSeq
 			res);
 		break;
 
-	case yzx:
+	case RotSeq::yzx:
 		threeaxisrot(-2 * (q.x * q.z - q.w * q.y),
 			q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z,
 			2 * (q.x * q.y + q.w * q.z),
@@ -87,7 +87,7 @@ static DirectX::XMFLOAT3 QuaternionToEulerRad(DirectX::XMFLOAT4 q, RotSeq rotSeq
 			res);
 		break;
 
-	case yzy:
+	case RotSeq::yzy:
 		twoaxisrot(2 * (q.y * q.z + q.w * q.x),
 			-2 * (q.x * q.y - q.w * q.z),
 			q.w * q.w - q.x * q.x + q.y * q.y - q.z * q.z,
@@ -96,7 +96,7 @@ static DirectX::XMFLOAT3 QuaternionToEulerRad(DirectX::XMFLOAT4 q, RotSeq rotSeq
 			res);
 		break;
 
-	case xyz:
+	case RotSeq::xyz:
 		threeaxisrot(-2 * (q.y * q.z - q.w * q.x),
 			q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z,
 			2 * (q.x * q.z + q.w * q.y),
@@ -105,7 +105,7 @@ static DirectX::XMFLOAT3 QuaternionToEulerRad(DirectX::XMFLOAT4 q, RotSeq rotSeq
 			res);
 		break;
 
-	case xyx:
+	case RotSeq::xyx:
 		twoaxisrot(2 * (q.x * q.y + q.w * q.z),
 			-2 * (q.x * q.z - q.w * q.y),
 			q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z,
@@ -114,7 +114,7 @@ static DirectX::XMFLOAT3 QuaternionToEulerRad(DirectX::XMFLOAT4 q, RotSeq rotSeq
 			res);
 		break;
 
-	case xzy:
+	case RotSeq::xzy:
 		threeaxisrot(2 * (q.y * q.z + q.w * q.x),
 			q.w * q.w - q.x * q.x + q.y * q.y - q.z * q.z,
 			-2 * (q.x * q.y - q.w * q.z),
@@ -123,7 +123,7 @@ static DirectX::XMFLOAT3 QuaternionToEulerRad(DirectX::XMFLOAT4 q, RotSeq rotSeq
 			res);
 		break;
 
-	case xzx:
+	case RotSeq::xzx:
 		twoaxisrot(2 * (q.x * q.z - q.w * q.y),
 			2 * (q.x * q.y + q.w * q.z),
 			q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z,

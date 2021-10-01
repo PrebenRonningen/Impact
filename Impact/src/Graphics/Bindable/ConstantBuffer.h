@@ -26,8 +26,8 @@ namespace Impact
 			constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 			constantBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 			constantBufferDesc.MiscFlags = 0;
-			constantBufferDesc.StructureByteStride = 0;
 			constantBufferDesc.ByteWidth = sizeof(consts);
+			constantBufferDesc.StructureByteStride = 0;
 
 			D3D11_SUBRESOURCE_DATA constBufferSubresourceData = {};
 			constBufferSubresourceData.pSysMem = &consts;

@@ -187,7 +187,11 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Components\LightComponent.cpp" />
     <ClCompile Include="src\Components\CameraComponent.cpp" />
+    <ClCompile Include="src\Components\MovementComponent.cpp" />
+    <ClCompile Include="src\Components\RandomMovementComponent.cpp" />
+    <ClCompile Include="src\Components\TransformComponent.cpp" />
     <ClCompile Include="src\Graphics\Bindable\BlendState.cpp" />
     <ClCompile Include="src\Graphics\Bindable\SamplerState.cpp" />
     <ClCompile Include="src\GDIManager.cpp" />
@@ -230,7 +234,9 @@
     <ClCompile Include="src\Graphics\Drawable\Primitives\TexturePlane.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Components\LightComponent.h" />
     <ClInclude Include="src\Components\CameraComponent.h" />
+    <ClInclude Include="src\Components\Components.h" />
     <ClInclude Include="src\Components\MovementComponent.h" />
     <ClInclude Include="src\Graphics\Bindable\BlendState.h" />
     <ClInclude Include="src\Graphics\Bindable\SamplerState.h" />
@@ -337,6 +343,10 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Impact\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Impact\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Impact\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="src\Shaders\TextureVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
@@ -347,6 +357,10 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)Impact\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)Impact\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)Impact\Resources\Shaders\%(Filename).cso</ObjectFileOutput>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

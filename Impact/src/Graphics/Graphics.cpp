@@ -243,9 +243,10 @@ namespace Impact
 		
 		GFX_EXCEPTION_NOINFO(__LINE__, __FILE__,
 			m_pDevice->CreateDepthStencilView(pDepthStencil.Get(), &depthStencilViewDesc, &m_pDepthStencilView));
-		
-		m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
 
+		// TODO: Catch when resolution missmatch RenderTargetView & depthStencilView
+		m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
+		
 		// viewport
 		D3D11_VIEWPORT viewport{};
 		viewport.Width = m_ViewportWidth;
