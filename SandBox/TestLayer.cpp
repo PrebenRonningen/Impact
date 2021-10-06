@@ -6,7 +6,7 @@
 
 std::vector<Impact::Entity*> m_Cameras;
 int currentCameraIdx = 0;
-static int recursionLevel = 1;
+static int recursionLevel = 4;
 TestLayer::TestLayer() : m_Entities{}, m_Earth{nullptr}, m_pCamera{nullptr}
 {
 	Impact::EventHandler::RegisterEvent(this, 1, Impact::Event::EventType::KeyPressed | Impact::Event::EventType::KeyReleased, [this](auto&&... args) -> decltype(auto)
@@ -40,7 +40,9 @@ void TestLayer::OnAttach(Impact::Graphics& gfx)
 //	m_Draw.push_back(entity->AddComponent<Impact::Cube>(gfx));
 	entity->AddComponent<Impact::MovementComponent>();
 	entity->AddComponent<Impact::CameraComponent>();
-	entity->GetComponent<Impact::MovementComponent>()->AssignMovementUpdate(entity->GetComponent<Impact::CameraComponent>()->GetNeedsUpdate());
+	//entity->GetComponent<Impact::MovementComponent>()->AssignMovementUpdate(entity->GetComponent<Impact::CameraComponent>()->GetNeedsUpdate());
+	//entity->GetComponent<Impact::TransformComponent>()->Translation() = DirectX::XMFLOAT3(0,-130,62);
+	//entity->GetComponent<Impact::TransformComponent>()->Rotation() = DirectX::XMFLOAT3(45,0,0);
 	m_Entities.push_back(entity);
 	m_Cameras.push_back(entity);
 
@@ -49,7 +51,7 @@ void TestLayer::OnAttach(Impact::Graphics& gfx)
 //	m_Draw.push_back(entity->AddComponent<Impact::Cube>(gfx));
 	entity->AddComponent<Impact::MovementComponent>();
 	entity->AddComponent<Impact::CameraComponent>();
-	entity->GetComponent<Impact::MovementComponent>()->AssignMovementUpdate(entity->GetComponent<Impact::CameraComponent>()->GetNeedsUpdate());
+	//entity->GetComponent<Impact::MovementComponent>()->AssignMovementUpdate(entity->GetComponent<Impact::CameraComponent>()->GetNeedsUpdate());
 	m_Entities.push_back(entity);
 	m_Cameras.push_back(entity);
 
@@ -78,12 +80,16 @@ void TestLayer::OnAttach(Impact::Graphics& gfx)
 	// Light 1
 	entity = m_Scene->CreateEntity();
 	entity->AddComponent<Impact::LightComponent>(gfx);
-	entity->GetComponent<Impact::LightComponent>()->SetLightColor(DirectX::XMFLOAT3(0.2f, 0.5f, 0.1f));
+	entity->GetComponent<Impact::LightComponent>()->SetDirectionalLight();
 	m_Entities.push_back(entity);
 	// Light 2
 	entity = m_Scene->CreateEntity();
 	entity->AddComponent<Impact::LightComponent>(gfx);
-	entity->GetComponent<Impact::LightComponent>()->SetLightColor(DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
+	entity->GetComponent<Impact::LightComponent>()->SetPointLight();
+	entity->GetComponent<Impact::TransformComponent>()->Translation().z = 65.f;
+	entity->GetComponent<Impact::LightComponent>()->LightPosition() = entity->GetComponent<Impact::TransformComponent>()->Translation();
+	m_Light = entity;
+
 	m_Entities.push_back(entity);
 }
 
@@ -104,7 +110,7 @@ void TestLayer::Update(float dt) noexcept
 	moonTransform->Rotation().x = fmod(moonTransform->Rotation().x + m_mWorldRotationSpeed.x * dt, 360.f);
 	moonTransform->Rotation().y = fmod(moonTransform->Rotation().y + m_mWorldRotationSpeed.y * dt, 360.f);
 	moonTransform->Rotation().z = fmod(moonTransform->Rotation().z + m_mWorldRotationSpeed.z * dt, 360.f);
-
+	m_Light->GetComponent<Impact::LightComponent>()->LightPosition() = DirectX::XMFLOAT3(moonTransform->GetTransform().m[3]);
 	for (auto* e : m_Entities)
 		e->Update(dt);
 }
@@ -219,6 +225,20 @@ void TestLayer::ImGuiRender() noexcept
 
 			m_Earth->GetComponent<Impact::IcoSphere>()->UpdateModel(recursionLevel);
 		}
+	}
+	ImGui::End();
+
+	if (ImGui::Begin("Light"))
+	{
+		auto& lightData = m_Light->GetComponent<Impact::LightComponent>()->UIWindow();
+		;
+		ImGui::DragFloat3("Light Direction", &lightData.lightDir.x);
+		ImGui::DragFloat3("Light Color", &lightData.lightColor.x);
+		ImGui::DragFloat("Light Range", &lightData.lightRange);
+		ImGui::DragFloat("Light Intensity", &lightData.lightIntensity);
+		ImGui::DragFloat("Light AttConst", &lightData.attConst);
+		ImGui::DragInt("Light FallOffType", &lightData.fallOffType, 1, 0, 2);
+		ImGui::DragInt("Light Type", &lightData.lightType, 1, 0, 1);
 	}
 	ImGui::End();
 }

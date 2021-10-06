@@ -65,17 +65,17 @@ namespace Impact
 			AddStaticBind(std::make_unique<InputLayout>(gfx, inputElements, pVSbc));
 			AddStaticBind(std::make_unique<Topology>(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 		}
-			AddBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/uv_grid_2.png")));
-		//	static int tex = 0;
-		//	if (tex < 1)
-		//{
-		//	tex++;
-		// AddBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/Earth8k.jpg")));
-		//}
-		//else
-		//{
-		//	AddBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/moon8k.jpg")));
-		//}
+		//	AddBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/uv_grid_2.png")));
+			static int tex = 0;
+			if (tex < 1)
+			{
+				tex++;
+				 AddBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/Earth8k.jpg")));
+			}
+			else
+			{
+				AddBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/moon8k.jpg")));
+			}
 
 		m_Model = Primitive::IcoSphere::Create<Vertex>();
 

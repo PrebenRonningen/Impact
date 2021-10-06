@@ -1,5 +1,6 @@
 #include "CameraComponent.h"
 #include "Components\TransformComponent.h"
+#include "Components\MovementComponent.h"
 #include "Graphics\Bindable\TransformCbuf.h"
 #include "Entity\Entity.h"
 
@@ -10,6 +11,10 @@ namespace Impact
 		, m_NeedsUpdate{ false }
 	{
 		Impact::TransformCbuf::SetCamera(GetParent()->GetComponent<TransformComponent>()->GetInverseTransform());
+		if (GetParent()->GetComponent<MovementComponent>())
+		{
+			GetParent()->GetComponent<MovementComponent>()->AssignMovementUpdate(m_NeedsUpdate);
+		}
 	}
 
 	void CameraComponent::Update(float) noexcept

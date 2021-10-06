@@ -424,11 +424,11 @@ namespace Impact
 					uint32_t a = indices[(size_t)tempIndices[i]];
 					uint32_t b = indices[(size_t)tempIndices[i] + 1];
 					uint32_t c = indices[(size_t)tempIndices[i] + 2];
-
+				
 					V A = vertices[a];
 					V B = vertices[b];
 					V C = vertices[c];
-
+				
 					if (A.texCoord.x < 0.25f)
 					{
 						A.texCoord.x += 1;

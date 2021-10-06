@@ -18,6 +18,7 @@ private:
 // For testing
 	Impact::TransformComponent* icoTransform = nullptr;
 	Impact::TransformComponent* moonTransform = nullptr;
+	Impact::Entity* m_Light;
 	DirectX::XMFLOAT3 m_eWorldRotationSpeed{ 0.f, 0.f, 0.f };
 	DirectX::XMFLOAT3 m_eLocalRotationSpeed{ 0.f, 0.f, 0.f };
 	
@@ -30,7 +31,6 @@ private:
 
 	Impact::Entity* m_Earth;
 	Impact::Entity* m_pCamera;
-	
 	
 	std::unique_ptr<Impact::Scene> m_Scene;
 };

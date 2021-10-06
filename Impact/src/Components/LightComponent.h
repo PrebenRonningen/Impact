@@ -12,22 +12,36 @@ namespace Impact
 
 	class LightComponent : public Component
 	{
+		struct LightData
+		{
+			DirectX::XMFLOAT3 lightPos;
+			float pad;
+			DirectX::XMFLOAT3 lightDir;
+			float pad2;
+			DirectX::XMFLOAT3 lightColor;
+			float pad3;
+
+			float lightRange;
+			float lightIntensity;
+			float attConst;
+			int fallOffType;
+			alignas(16) int lightType;
+		};
+
 		static const size_t MAX_LIGHTS = 100;
+		struct Lights {
+			size_t size;
+			LightData lightData[MAX_LIGHTS];
+		};
 	public:
 		LightComponent(Entity* pParent, Graphics& gfx);
 
 		virtual void Bind(Graphics& gfx)noexcept;
 		void SetLightColor(DirectX::XMFLOAT3 color);
-	private:
-		struct LightData
-		{
-			alignas(16) DirectX::XMFLOAT3 position;
-		};
-
-		struct Lights{
-			size_t size;
-			LightData lightData[MAX_LIGHTS];
-		};
+		void SetPointLight();
+		void SetDirectionalLight();
+		DirectX::XMFLOAT3& LightPosition();
+		LightData& UIWindow();
 
 	private:
 		static Lights m_LightData;
