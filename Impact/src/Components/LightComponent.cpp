@@ -2,12 +2,14 @@
 
 namespace Impact {
 	LightComponent::Lights LightComponent::m_LightData{};
+	size_t LightComponent::m_CurrentActiveLight = 0;
 	LightComponent::LightComponent(Entity* pParent, Graphics& gfx)
 	: Component(pParent)
 	, m_LightDataCbuf(gfx, Impact::PipelineStage::PixelShader)
 	, m_Id{}
 	{
 		m_Id = m_LightData.size++;
+		m_CurrentActiveLight = m_LightData.size;
 	}
 
 	void LightComponent::SetPointLight()
@@ -49,9 +51,12 @@ namespace Impact {
 
 	LightComponent::LightData& LightComponent::UIWindow()
 	{
-
-
 		return m_LightData.lightData[m_Id];
+	}
+
+	void LightComponent::ToggleLights()
+	{
+		m_LightData.size = (m_LightData.size >= m_CurrentActiveLight) ? 0 : m_CurrentActiveLight;
 	}
 
 	void LightComponent::Bind(Graphics& gfx) noexcept

@@ -4,6 +4,15 @@
 
 namespace Impact
 {
+		enum class PipelineStage : uint8_t
+		{
+			VertexShader = 1,		// supported
+			//HullShader = 2,
+			//DomainShader = 3,
+			//GeometryShader = 4,
+			PixelShader = 5,		// supported
+			//ComputeShader = 6
+		};
 	class Bindable
 	{
 	public:

@@ -1,8 +1,9 @@
 Texture2D gTexDiffuse : register( t0 );
-//Texture2D gTexHeight : register( t1 );
+
 SamplerState gSamplerState: register( s0 );
 
-const float3 ambientLight = float3( 0.075f, 0.075f, 0.075f );
+static const float3 ambientLight = float3( 0.075f, 0.075f, 0.075f );
+
 
 struct LightData
 {
@@ -47,7 +48,9 @@ float3 CalculatePointLight(const float3 vertWorldPos, const float3 vertNormal, c
 	// falloff type: none, linear, quadratic
 	// can be added by including 1st, the two first, or all parts
 
-	float attenuation;
+	float attenuation
+	{
+	};
 	switch( light.fallOffType )
 	{
 		case 0: // None
@@ -97,10 +100,13 @@ float4 main(PSInput input) : SV_TARGET
 			}
 		}
 	}
-
+	
 	const float3 t = gTexDiffuse.Sample( gSamplerState, input.TexCoord ).rgb;
-		
-	const float3 finalColor = t * ( lightDiffuse + ambientLight );
+	float3 finalColor = t * ( lightDiffuse + ambientLight );
+	if( NumLights <= 0 )
+	{
+		finalColor = t;
+	}
 	
 	return float4( finalColor, 1.0f );
 }

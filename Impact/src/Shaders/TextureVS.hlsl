@@ -24,9 +24,13 @@ struct VSOut
 VSOut main(VSInput input )
 {
 	VSOut vsOutput = ( VSOut )0;
-	vsOutput.Position = mul( float4( input.Position, 1 ), gWorldViewProj );
-	vsOutput.Color = float4( 1, 1, 1, 1 ); // not rly needed
+	//float3 translation = input.Normal;
+	//input.Position = translation;
+	//input.Position *= height;
+	//	input.WorldPos += translation;
 	
+	vsOutput.Position = mul( float4( input.Position, 1 ), gWorldViewProj );
+
 	vsOutput.Normal = normalize( mul( input.Normal, ( float3x3 )gWorld ) );
 	//vsOutput.Normal.z *= -1;
 	//vsOutput.Normal += float3( 1,1,1);
@@ -34,6 +38,7 @@ VSOut main(VSInput input )
 	vsOutput.WorldPos = ( float3 )mul( float4( input.Position, 1 ), gWorld );
 	
 	vsOutput.TexCoord = input.TexCoord;
+	
 	
 	return vsOutput;
 }

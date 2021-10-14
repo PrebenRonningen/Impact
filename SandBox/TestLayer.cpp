@@ -4,6 +4,7 @@
 #include "Graphics\Bindable\TransformCbuf.h"
 #include "Events\EventHandler.h"
 
+
 std::vector<Impact::Entity*> m_Cameras;
 int currentCameraIdx = 0;
 static int recursionLevel = 4;
@@ -231,11 +232,16 @@ void TestLayer::ImGuiRender() noexcept
 	if (ImGui::Begin("Light"))
 	{
 		auto& lightData = m_Light->GetComponent<Impact::LightComponent>()->UIWindow();
-		;
+		
+		if (ImGui::Button("Deactivate Lights"))
+		{
+			Impact::LightComponent::ToggleLights();
+		}
+
 		ImGui::DragFloat3("Light Direction", &lightData.lightDir.x);
 		ImGui::DragFloat3("Light Color", &lightData.lightColor.x);
 		ImGui::DragFloat("Light Range", &lightData.lightRange);
-		ImGui::DragFloat("Light Intensity", &lightData.lightIntensity);
+		ImGui::DragFloat("Light Intensity", &lightData.lightIntensity, 0.01f);
 		ImGui::DragFloat("Light AttConst", &lightData.attConst);
 		ImGui::DragInt("Light FallOffType", &lightData.fallOffType, 1, 0, 2);
 		ImGui::DragInt("Light Type", &lightData.lightType, 1, 0, 1);

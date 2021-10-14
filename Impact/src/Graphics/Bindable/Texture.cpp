@@ -2,9 +2,10 @@
 #include "Graphics\Surface.h"
 namespace Impact
 {
-	Texture::Texture(Graphics& gfx, const Surface& surface, const int slot)
+	Texture::Texture(Graphics& gfx, const Surface& surface, const int slot, PipelineStage stage)
 	{
 		m_Slot = slot;
+		m_Stage = stage;
 		D3D11_TEXTURE2D_DESC textureDesc{};
 		textureDesc.Width = surface.GetWidth();
 		textureDesc.Height = surface.GetHeight();
@@ -32,6 +33,18 @@ namespace Impact
 	}
 	void Texture::Bind(Graphics& gfx) noexcept
 	{
-	GetContext(gfx)->PSSetShaderResources(m_Slot, 1, m_pTextureView.GetAddressOf());
+		switch (m_Stage)
+		{
+		case PipelineStage::VertexShader:
+			{
+				GetContext(gfx)->VSSetShaderResources(m_Slot, 1, m_pTextureView.GetAddressOf());
+				break;
+			}
+		case PipelineStage::PixelShader:
+			{
+				GetContext(gfx)->PSSetShaderResources(m_Slot, 1, m_pTextureView.GetAddressOf());
+				break;
+			}
+		}
 	}
 }

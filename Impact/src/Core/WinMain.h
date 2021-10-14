@@ -1,5 +1,5 @@
 #include "Core/ImpactWin.h"
-#include <vld.h>
+//#include <vld.h>
 #include "Debug/WindowsMessageMap.h"
 #include "Core/Window.h"
 #include "Core/Exceptions/ImpException.h"

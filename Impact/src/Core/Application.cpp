@@ -25,6 +25,8 @@ namespace Impact
 	Keyboard& Application::m_Keyboard = Keyboard::Get();
 	Mouse& Application::m_Mouse = Mouse::Get();
 
+	DirectX::XMFLOAT4 color = { 0.5f, 0.f, 0.5f, 1.f, };
+
 	Application::Application()
 		: m_Window{ 1280u, 720u, L"Impact 3D" }
 		, m_LayerStack{}
@@ -39,6 +41,7 @@ namespace Impact
 		
 		// this must be fone so the function pointer is the same for the functions registering
 		// can be avoided by using bitwise or to add the EventTypes together
+
 		auto onMove = [this](auto&&... args) -> decltype( auto )
 		{
 			return this->Application::OnMouseEvent(std::forward<decltype( args )>(args)...);
@@ -48,7 +51,9 @@ namespace Impact
 		EventHandler::RegisterEvent(this, 0, Event::EventType::LPressed | Event::EventType::LReleased, onMove);
 
 		PushOverlay(m_pImguiLayer = new ImguiLayer());
-		
+
+		DirectX::XMStoreFloat4(&color, DirectX::XMVectorMultiply(DirectX::XMLoadFloat4(&color), DirectX::Colors::CornflowerBlue));
+
 	}
 	
 	Application::~Application()
@@ -100,16 +105,10 @@ namespace Impact
 			for ( Layer* layer : m_LayerStack )
 				layer->Update(dt);
 	}
-
+	
 	void Application::Render()
 	{
-		//m_Color = sin(std::chrono::duration<float>(std::chrono::steady_clock::now().time_since_epoch()).count()) / 2.f + 0.5f;
-		//DirectX::XMFLOAT4 col{ m_Color,m_Color,m_Color,m_Color };
-		//DirectX::XMStoreFloat4(&col, DirectX::XMVectorMultiply(DirectX::XMLoadFloat4(&col), DirectX::Colors::CornflowerBlue));
-
-		DirectX::XMFLOAT4 col = { 0.5f, 0.f, 0.5f, 1.f, };
-		DirectX::XMStoreFloat4(&col, DirectX::XMVectorMultiply(DirectX::XMLoadFloat4(&col), DirectX::Colors::CornflowerBlue));
-		m_Window.GetGraphix().ClearBuffer( col );
+		m_Window.GetGraphix().ClearBuffer(color);
 
 		for ( Layer* layer : m_LayerStack )
 			layer->Render(m_Window.GetGraphix());

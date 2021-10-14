@@ -43,8 +43,11 @@ namespace Impact
 		DirectX::XMFLOAT3& LightPosition();
 		LightData& UIWindow();
 
+		static void ToggleLights();
+
 	private:
 		static Lights m_LightData;
+		static size_t m_CurrentActiveLight;
 		size_t m_Id;
 		ConstantBuffer<Lights> m_LightDataCbuf;
 	};

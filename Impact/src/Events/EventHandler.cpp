@@ -31,7 +31,6 @@ namespace Impact
 		if(source != m_funcSources.end())
 			exist = true;
 
-	//	m_MouseBuffer.resize(m_BufferSize);
 		auto it = m_LayerCallback.find(layer);
 		if ( it != m_LayerCallback.end() )
 		{
@@ -97,6 +96,9 @@ namespace Impact
 				}
 			}
 			if (event->m_Handled) break;
+		}
+	}
+
 			//for( pair<(eventTypeMask)bitset<16>, Function> layerEvents : pLayer )
 			//{
 			//	if(layerEvents.first & event.type())
@@ -105,8 +107,6 @@ namespace Impact
 			//		break;
 			//	}
 			//}
-		}
-	}
 
 	template<typename T>
 	void EventHandler::TrimBuffer(std::deque<T>& buffer) noexcept

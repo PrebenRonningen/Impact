@@ -2,16 +2,6 @@
 #include "Graphics/Bindable/Bindable.h"
 namespace Impact
 {
-	enum class PipelineStage : uint8_t
-	{
-		VertexShader = 1,		// supported
-		//HullShader = 2,
-		//DomainShader = 3,
-		//GeometryShader = 4,
-		PixelShader = 5,		// supported
-		//ComputeShader = 6
-	};
-
 	template<typename C>
 	class ConstantBuffer : public Bindable
 	{

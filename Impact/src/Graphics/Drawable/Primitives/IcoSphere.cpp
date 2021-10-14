@@ -20,12 +20,15 @@ namespace Impact
 		if (!IsStaticInitialized())
 		{
 
+			AddStaticBind(std::make_unique<BlendState>(gfx));
+
 			std::unique_ptr<VertexShader> pVS = std::make_unique<VertexShader>(gfx, "TextureVS.cso");
 			ID3DBlob* pVSbc = pVS->GetByteCode();
 
 			AddStaticBind(std::move(pVS));
 
 			AddStaticBind(std::make_unique<PixelShader>(gfx, "TexturePS.cso"));
+
 
 			AddStaticBind(std::make_unique<SamplerState>(gfx));
 
@@ -70,11 +73,12 @@ namespace Impact
 			if (tex < 1)
 			{
 				tex++;
-				 AddBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/Earth8k.jpg")));
+				 AddBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/Earth8k.jpg"), 0, PipelineStage::PixelShader));
+				 AddBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/EarthHeight4k.png"), 1, PipelineStage::PixelShader));
 			}
 			else
 			{
-				AddBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/moon8k.jpg")));
+				AddBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/moon8k.jpg"), 0));
 			}
 
 		m_Model = Primitive::IcoSphere::Create<Vertex>();
