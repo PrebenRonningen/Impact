@@ -74,7 +74,7 @@ namespace Impact
 			{
 				tex++;
 				 AddBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/Earth8k.jpg"), 0, PipelineStage::PixelShader));
-				 AddBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/EarthHeight4k.png"), 1, PipelineStage::PixelShader));
+				 AddBind(std::make_unique<Texture>(gfx, Surface::CreateFromFile("../Impact/Resources/Images/EarthHeight4k.png"), 0, PipelineStage::VertexShader));
 			}
 			else
 			{

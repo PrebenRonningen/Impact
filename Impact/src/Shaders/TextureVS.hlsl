@@ -1,3 +1,8 @@
+
+Texture2D gHeightMap : register( t0 );
+
+static const float maxHeight = .128;
+
 cbuffer bcPerFrame : register(b0)
 {
 	matrix gWorld;
@@ -24,21 +29,20 @@ struct VSOut
 VSOut main(VSInput input )
 {
 	VSOut vsOutput = ( VSOut )0;
-	//float3 translation = input.Normal;
-	//input.Position = translation;
-	//input.Position *= height;
-	//	input.WorldPos += translation;
+	uint2 dimensions = ( uint2 )0;
+	gHeightMap.GetDimensions( dimensions.x, dimensions.y );
+
+	const float height = gHeightMap[input.TexCoord*dimensions] * maxHeight;
+	
+	input.Position += height * input.Normal;
+	
+	vsOutput.Normal = normalize( mul( input.Normal, ( float3x3 )gWorld ) );
 	
 	vsOutput.Position = mul( float4( input.Position, 1 ), gWorldViewProj );
-
-	vsOutput.Normal = normalize( mul( input.Normal, ( float3x3 )gWorld ) );
-	//vsOutput.Normal.z *= -1;
-	//vsOutput.Normal += float3( 1,1,1);
-	//vsOutput.Normal /= 2.f;
+	
 	vsOutput.WorldPos = ( float3 )mul( float4( input.Position, 1 ), gWorld );
 	
 	vsOutput.TexCoord = input.TexCoord;
-	
 	
 	return vsOutput;
 }

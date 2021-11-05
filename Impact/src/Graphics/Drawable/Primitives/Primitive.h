@@ -301,50 +301,53 @@ namespace Impact
 				DirectX::XMVECTOR normalizedDirection = DirectX::XMVector2Normalize(direction);
 				DirectX::XMFLOAT2 nR;
 				DirectX::XMStoreFloat2(&nR, normalizedDirection);
-				std::vector<DirectX::XMFLOAT3> pos
-				{
-					{ -nR.x,  nR.y, 0},
-					{  nR.x,  nR.y, 0},
-					{ -nR.x, -nR.y, 0},
-					{  nR.x, -nR.y, 0},
 
-					{  0, -nR.x, nR.y},
-					{  0,  nR.x, nR.y},
-					{  0, -nR.x,-nR.y},
-					{  0,  nR.x,-nR.y},
 
-					{  nR.y, 0, -nR.x},
-					{  nR.y, 0,  nR.x},
-					{ -nR.y, 0, -nR.x},
-					{ -nR.y, 0,  nR.x}
-				};
+				std::vector<DirectX::XMFLOAT3> pos =
+							{
+								{ -nR.x,  nR.y, 0},
+								{  nR.x,  nR.y, 0},
+								{ -nR.x, -nR.y, 0},
+								{  nR.x, -nR.y, 0},
+
+								{  0, -nR.x, nR.y},
+								{  0,  nR.x, nR.y},
+								{  0, -nR.x,-nR.y},
+								{  0,  nR.x,-nR.y},
+
+								{  nR.y, 0, -nR.x},
+								{  nR.y, 0,  nR.x},
+								{ -nR.y, 0, -nR.x},
+								{ -nR.y, 0,  nR.x}
+							};
 
 				std::vector<uint32_t> indices =
-				{
-					0,11,5,
-					0,5,1,
-					0,1,7,
-					0,7,10,
-					0,10,11,
+							{
+								0,11,5,
+								0,5,1,
+								0,1,7,
+								0,7,10,
+								0,10,11,
 
-					1,5,9,
-					5,11,4,
-					11,10,2,
-					10,7,6,
-					7,1,8,
+								1,5,9,
+								5,11,4,
+								11,10,2,
+								10,7,6,
+								7,1,8,
 
-					3,9,4,
-					3,4,2,
-					3,2,6,
-					3,6,8,
-					3,8,9,
+								3,9,4,
+								3,4,2,
+								3,2,6,
+								3,6,8,
+								3,8,9,
 
-					4,9,5,
-					2,4,11,
-					6,2,10,	// <- this one is acting weird
-					8,6,7,
-					9,8,1
-				};
+								4,9,5,
+								2,4,11,
+								6,2,10,	// <- this one is acting weird
+								8,6,7,
+								9,8,1
+							};
+
 
 
 				int recursionLevel = recLevels;
